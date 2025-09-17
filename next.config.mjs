@@ -37,7 +37,7 @@ const nextConfig = {
             "script-src 'self' 'unsafe-inline'; " +
             "style-src 'self' 'unsafe-inline' https:; " +
             "font-src 'self' https: data:; " +
-            "frame-src https://dms1.genaitech.dev; " +
+            "frame-src https://dms1.genaitech.dev https://view.officeapps.live.com; " +
             "frame-ancestors 'none';"
         },
         { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

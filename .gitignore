@@ -39,3 +39,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 dms-frontend-12-05.zip
+dms_ideal_finance(3).sql
+dms-demo-frontend.zip
