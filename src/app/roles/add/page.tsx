@@ -23,6 +23,7 @@ export default function AllDocTable() {
     const [selectedGroups, setSelectedGroups] = useState<{ [key: string]: string[] }>({});
     const [apiCallFailed, setApiCallFailed] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [needsApproval, setNeedsApproval] = useState(false);
 
     const isAuthenticated = useAuth();
 
@@ -39,7 +40,7 @@ export default function AllDocTable() {
         { name: "Deep Search", items: ["Deep Search", "Add Indexing", "Remove Indexing"] },
         { name: "Document Categories", items: ["Manage Document Category"] },
         { name: "Bulk Upload", items: ["View Bulk Upload","Delete Bulk Upload","Create Bulk Upload", "Edit Bulk Upload",] },
-        { name: "FTP Accounts", items: ["View FTP Accounts","Delete FTP Accounts","Create FTP Accounts", "Edit FTP Accounts",] },
+        // { name: "FTP Accounts", items: ["View FTP Accounts","Delete FTP Accounts","Create FTP Accounts", "Edit FTP Accounts",] },
         { name: "Attributes", items: ["View Attributes", "Add Attributes", "Edit Attributes","Delete Attributes"] },
         { name: "Sectors", items: ["Manage Sectors"] },
         { name: "Documents Audit Trail", items: ["View Document Audit Trail"] },
@@ -120,6 +121,7 @@ export default function AllDocTable() {
             const formData = new FormData();
             formData.append("role_name", roleName);
             formData.append("permissions", JSON.stringify(selectedArray));
+            formData.append("needs_approval", needsApproval ? "1" : "0");
 
             const response = await postWithAuth(`add-role`, formData);
 
@@ -176,7 +178,12 @@ export default function AllDocTable() {
                                 </div>
                             )}
                         </div>
-
+                             <Checkbox
+                            checked={needsApproval}
+                            onChange={(e) => setNeedsApproval(e.target.checked)}
+                        >
+                            Documents Needs Approval
+                        </Checkbox>   
                         <Heading text="Permission" color="#444" />
                         <div className="mt-2">
                             <Checkbox
