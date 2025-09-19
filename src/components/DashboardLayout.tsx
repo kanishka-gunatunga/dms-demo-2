@@ -142,7 +142,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
           permission: { group: "Approve Documents", action: "Approve Documents" },
         },
         {
-          name: "Approve Documents",
+          name: "Approved Document History",
           url: "/document-approvel/history",
           icon: <RiUser3Line />,
           permission: { group: "Approve Documents", action: "Approved Document History" },
