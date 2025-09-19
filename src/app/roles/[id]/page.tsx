@@ -222,7 +222,7 @@ interface Props {
                                 </div>
                             )}
                         </div>
-                            <Checkbox  className="mt-2"
+                            <Checkbox  className="mb-2"
                                 checked={needsApproval}
                                 onChange={(e) => setNeedsApproval(e.target.checked)}
                             >
