@@ -29,7 +29,7 @@ interface Props {
     const [toastMessage, setToastMessage] = useState("");
     const [error, setError] = useState("");
     const [selectedGroups, setSelectedGroups] = useState<{ [key: string]: string[] }>({});
-
+    const [needsApproval, setNeedsApproval] = useState(false);
 
     const fetchRoleData = async (id: string) => {
         try {
@@ -40,6 +40,7 @@ interface Props {
                 const roleData = response;
                 setRoleName(roleData.role_name);
                 setRoleName(response.role_name);
+                setNeedsApproval(roleData.needs_approval === 1 || roleData.needs_approval === "1");
                 const parsedPermissions = JSON.parse(roleData.permissions || "[]");
 
                 const initialSelectedGroups: { [key: string]: string[] } = {};
@@ -89,7 +90,8 @@ interface Props {
         { name: "Deep Search", items: ["Deep Search", "Add Indexing", "Remove Indexing"] },
         { name: "Document Categories", items: ["Manage Document Category"] },
         { name: "Bulk Upload", items: ["View Bulk Upload","Delete Bulk Upload","Create Bulk Upload", "Edit Bulk Upload",] },
-        { name: "FTP Accounts", items: ["View FTP Accounts","Delete FTP Accounts","Create FTP Accounts", "Edit FTP Accounts",] },
+         { name: "Approve Documents", items: ["Approve Documents","Approved Document History"] },
+        // { name: "FTP Accounts", items: ["View FTP Accounts","Delete FTP Accounts","Create FTP Accounts", "Edit FTP Accounts",] },
         { name: "Attributes", items: ["View Attributes", "Add Attributes", "Edit Attributes","Delete Attributes"] },
         { name: "Sectors", items: ["Manage Sectors"] },
         { name: "Documents Audit Trail", items: ["View Document Audit Trail"] },
@@ -167,7 +169,7 @@ interface Props {
             const formData = new FormData();
             formData.append("role_name", roleName);
             formData.append("permissions", JSON.stringify(selectedArray));
-
+            formData.append("needs_approval", needsApproval ? "1" : "0");
             const response = await postWithAuth(`role-details/${id}`, formData);
 
 
@@ -220,7 +222,12 @@ interface Props {
                                 </div>
                             )}
                         </div>
-
+                            <Checkbox  className="mt-2"
+                                checked={needsApproval}
+                                onChange={(e) => setNeedsApproval(e.target.checked)}
+                            >
+                                Uploaded Documents Needs Approval
+                            </Checkbox>       
                         <Heading text="Permission" color="#444" />
                         <div className="mt-2">
                             <Checkbox
