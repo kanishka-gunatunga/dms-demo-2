@@ -1875,122 +1875,16 @@ export default function AllDocTable() {
       <DashboardLayout>
         <div className="d-flex justify-content-between align-items-center pt-2">
           <div className="d-flex flex-row align-items-center">
-            <Heading text="All Documents" color="#444" />
+            <Heading text="Approve Documents" color="#444" />
             {/* <InfoModal
               title="Sample Blog"
               content={`<h1><strong>Hello world,</strong></h1><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p>`}
             /> */}
           </div>
-          <div className="d-flex flex-row">
-            {hasPermission(permissions, "All Documents", "Create Document") && (
-              <Link
-                href="/all-documents/add"
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <FaPlus className="me-1" /> Add Document
-              </Link>
-            )}
-          </div>
+         
         </div>
         <div className="d-flex flex-column bg-white p-2 p-lg-3 rounded mt-3 position-relative">
-          <div className="d-flex flex-column flex-lg-row">
-            <div className="col-12 col-lg-5 d-flex flex-column flex-lg-row">
-              <div className="input-group mb-3 pe-lg-2">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search By Name Or Description"
-                  onChange={(e) => handleTermSearch(e.target.value)}
-                ></input>
-              </div>
-              <div className="input-group mb-3 pe-lg-2">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search By Meta Tags"
-                  onChange={(e) => handleMetaSearch(e.target.value)}
-                ></input>
-              </div>
-            </div>
-            <div className="col-12 col-lg-7 d-flex flex-column flex-lg-row">
-              <div className="col-12 col-lg-4">
-                <div className="input-group mb-3">
-                  <DropdownButton
-                    id="dropdown-category-button"
-                    title={
-                      filterData.category
-                        ? categoryDropDownData.find(
-                            (item) => item.id.toString() === filterData.category
-                          )?.category_name
-                        : "Select Category"
-                    }
-                    className="custom-dropdown-text-start text-start w-100"
-                    onSelect={(value) => handleCategorySelect(value || "")}
-                  >
-                    <Dropdown.Item
-                      eventKey=""
-                      style={{ fontStyle: "italic", color: "gray" }}
-                    >
-                      None
-                    </Dropdown.Item>
-
-                    {categoryDropDownData.map((category) => (
-                      <Dropdown.Item
-                        key={category.id}
-                        eventKey={category.id.toString()}
-                        style={{
-                          fontWeight:
-                            category.parent_category === "none"
-                              ? "bold"
-                              : "normal",
-                          paddingLeft:
-                            category.parent_category === "none"
-                              ? "10px"
-                              : "20px",
-                        }}
-                      >
-                        {category.category_name}
-                      </Dropdown.Item>
-                    ))}
-                  </DropdownButton>
-                </div>
-              </div>
-              <div className="col-12 col-lg-4 px-lg-2">
-                <div className="input-group mb-3">
-                  <DropdownButton
-                    id="dropdown-storage-button"
-                    title={filterData.storage || "Select Storage"}
-                    className="w-100 custom-dropdown-text-start"
-                  >
-                    <Dropdown.Item onClick={() => handleStorageSelect("")}>
-                      None
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() =>
-                        handleStorageSelect("Local Disk (Default)")
-                      }
-                    >
-                      Local Disk (Default)
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => handleStorageSelect("Amazon S3")}
-                    >
-                      Amazon S3
-                    </Dropdown.Item>
-                  </DropdownButton>
-                </div>
-              </div>
-              <div className="col-12 col-lg-4">
-                <div className="input-group mb-3 mb-lg-0">
-                  {/* <DatePicker onChange={() => handleDateChange} /> */}
-                  <DatePicker
-                    placeholder="Created Date"
-                    onChange={handleDateChange}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          
           <div>{isLoadingTable && <LoadingBar />}</div>
           <div>
             <div
@@ -2141,11 +2035,7 @@ export default function AllDocTable() {
                                 View
                               </Dropdown.Item>
                             )} */}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "View Documents"
-                            ) && (
+              
                               <Dropdown.Item
                                 className="py-2"
                                 onClick={() =>
@@ -2159,242 +2049,7 @@ export default function AllDocTable() {
                                 <IoEye className="me-2" />
                                 View
                               </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Edit Document"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "editModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <MdModeEditOutline className="me-2" />
-                                Edit
-                              </Dropdown.Item>
-                            )}
-
-                            {["pdf", "docx", "xlsx", "pptx", "txt"].includes(
-                              item.type
-                            ) &&
-                              hasPermission(
-                                permissions,
-                                "All Documents",
-                                "Edit Document"
-                              ) && (
-                                <Dropdown.Item
-                                  onMouseEnter={(e) => {
-                                    setAnchorEl(e.currentTarget);
-                                    setShowSubMenu(true);
-                                  }}
-                                  onMouseLeave={() => {
-                                    setShowSubMenu(false);
-                                  }}
-                                  className="py-2 position-relative"
-                                >
-                                  <Image
-                                    src="/icons8-ai-48.png"
-                                    alt="ai icon"
-                                    width={16}
-                                    height={16}
-                                    className="me-2"
-                                  />
-                                  AI Options
-                                  {showSubMenu && (
-                                    <div
-                                      onMouseEnter={() => setShowSubMenu(true)}
-                                      onMouseLeave={() => setShowSubMenu(false)}
-                                      className="position-absolute bg-white shadow rounded"
-                                      style={{
-                                        top: 0,
-                                        left: "100%",
-                                        zIndex: 100000,
-                                        minWidth: "200px",
-                                      }}
-                                    >
-                                      <Dropdown.Item
-                                        onClick={() =>
-                                          toggleChat({
-                                            documentId: item.id.toString(),
-                                            documentName: item.name,
-                                            action: "summarize",
-                                          })
-                                        }
-                                      >
-                                        Summarize Document
-                                      </Dropdown.Item>
-                                      <Dropdown.Item
-                                        onClick={() =>
-                                          toggleChat({
-                                            documentId: item.id.toString(),
-                                            documentName: item.name,
-                                            action: "generate",
-                                          })
-                                        }
-                                      >
-                                        Content Generation
-                                      </Dropdown.Item>
-                                      <Dropdown.Item
-                                        onClick={() =>
-                                          toggleChat({
-                                            documentId: item.id.toString(),
-                                            documentName: item.name,
-                                            action: "qa",
-                                          })
-                                        }
-                                      >
-                                        Ask Questions
-                                      </Dropdown.Item>
-                                      <Dropdown.Item
-                                        onClick={() =>
-                                          toggleChat({
-                                            documentId: item.id.toString(),
-                                            documentName: item.name,
-                                            action: "tone",
-                                          })
-                                        }
-                                      >
-                                        Sentiment Analysis
-                                      </Dropdown.Item>
-                                      {/* <Dropdown.Item
-                                        onClick={() =>
-                                          toggleChat({
-                                            documentId: item.id.toString(),
-                                            documentName: item.name,
-                                            action: "translate",
-                                          })
-                                        }
-                                      >
-                                        Translate Document
-                                      </Dropdown.Item> */}
-                                    </div>
-                                  )}
-                                </Dropdown.Item>
-                              )}
-
-                            {/* <Dropdown.Item
-                              onMouseEnter={(e) => {
-                                setAnchorEl(e.currentTarget);
-                                setShowSubMenu(true);
-                              }}
-                              onMouseLeave={() => {
-                                setShowSubMenu(false);
-                              }}
-                              className="py-2 position-relative"
-                            >
-                              <Image src="/icons8-ai-48.png" alt="ai icon" width={16} height={16} className="me-2" />
-                              AI Options
-                              {showSubMenu && (
-                                <div
-                                  onMouseEnter={() => setShowSubMenu(true)}
-                                  onMouseLeave={() => setShowSubMenu(false)}
-                                  className="position-absolute bg-white shadow rounded"
-                                  style={{ top: 0, left: "100%", zIndex: 100000, minWidth: "200px" }}
-                                >
-                                  <Dropdown.Item
-                                    onClick={() =>
-                                      toggleChat({
-                                        documentId: item.id.toString(),
-                                        documentName: item.name,
-                                        action: "summarize",
-                                      })
-                                    }
-                                  >
-                                    Summarize Document
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() =>
-                                      toggleChat({
-                                        documentId: item.id.toString(),
-                                        documentName: item.name,
-                                        action: "generate",
-                                      })
-                                    }
-                                  >
-                                    Content Generation
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() =>
-                                      toggleChat({
-                                        documentId: item.id.toString(),
-                                        documentName: item.name,
-                                        action: "qa",
-                                      })
-                                    }
-                                  >
-                                    Ask Questions
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() =>
-                                      toggleChat({
-                                        documentId: item.id.toString(),
-                                        documentName: item.name,
-                                        action: "tone",
-                                      })
-                                    }
-                                  >
-                                    Sentiment Analysis
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() =>
-                                      toggleChat({
-                                        documentId: item.id.toString(),
-                                        documentName: item.name,
-                                        action: "translate",
-                                      })
-                                    }
-                                  >
-                                    Translate Document
-                                  </Dropdown.Item>
-                                </div>
-                              )}
-                            </Dropdown.Item> */}
-
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Share Document"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "shareDocumentModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <IoShareSocial className="me-2" />
-                                Share
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Manage Sharable Link"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleGetShareableLinkModel(item.id)
-                                }
-                                className="py-2"
-                              >
-                                <MdOutlineInsertLink className="me-2" />
-                                Get Shareable Link
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Download Document"
-                            ) && (
+   
                               <Dropdown.Item className="py-2">
                                 <Link
                                   href={"#"}
@@ -2407,145 +2062,19 @@ export default function AllDocTable() {
                                   Download
                                 </Link>
                               </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Upload New Version file"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "uploadNewVersionFileModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <MdUpload className="me-2" />
-                                Upload New Version file
+                    
+                            <Dropdown.Item className="py-2">
+                                <Link
+                                  href={"#"}
+                                  style={{ color: "#212529" }}
+                                  onClick={() =>
+                                    handleDownload(item.id, userId)
+                                  }
+                                >
+                                  <MdFileDownload className="me-2" />
+                                  Approve
+                                </Link>
                               </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Version History"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "versionHistoryModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <GoHistory className="me-2" />
-                                Version History
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Comment"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "commentModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <BiSolidCommentDetail className="me-2" />
-                                Comment
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Add Reminder"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "addReminderModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <BsBellFill className="me-2" />
-                                Add Reminder
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Send Email"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "sendEmailModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <MdEmail className="me-2" />
-                                Send Email
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Download Document"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "removeIndexingModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <AiOutlineZoomOut className="me-2" />
-                                Remove From Search
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Archive Document"
-                            ) && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "docArchivedModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <FaArchive className="me-2" />
-                                Archive
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(
-                              permissions,
-                              "All Documents",
-                              "Delete Document"
-                            ) && (
                               <Dropdown.Item
                                 onClick={() =>
                                   handleOpenModal(
@@ -2559,7 +2088,7 @@ export default function AllDocTable() {
                                 <AiFillDelete className="me-2" />
                                 Delete
                               </Dropdown.Item>
-                            )}
+                     
                           </DropdownButton>
                         </td>
                         {/* <td>
