@@ -40,6 +40,7 @@ export default function AllDocTable() {
         { name: "Deep Search", items: ["Deep Search", "Add Indexing", "Remove Indexing"] },
         { name: "Document Categories", items: ["Manage Document Category"] },
         { name: "Bulk Upload", items: ["View Bulk Upload","Delete Bulk Upload","Create Bulk Upload", "Edit Bulk Upload",] },
+        { name: "Approve Documents", items: ["Approve Documents","Approved Document History"] },
         // { name: "FTP Accounts", items: ["View FTP Accounts","Delete FTP Accounts","Create FTP Accounts", "Edit FTP Accounts",] },
         { name: "Attributes", items: ["View Attributes", "Add Attributes", "Edit Attributes","Delete Attributes"] },
         { name: "Sectors", items: ["Manage Sectors"] },
@@ -178,11 +179,11 @@ export default function AllDocTable() {
                                 </div>
                             )}
                         </div>
-                             <Checkbox
+                             <Checkbox  className="mt-2"
                             checked={needsApproval}
                             onChange={(e) => setNeedsApproval(e.target.checked)}
                         >
-                            Documents Needs Approval
+                            Uploaded Documents Needs Approval
                         </Checkbox>   
                         <Heading text="Permission" color="#444" />
                         <div className="mt-2">
