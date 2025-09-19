@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TableItem, UserDropdownItem, BulkUploadItem, AttributeUploadItem, SMTPUploadItem, AuditTrialItem, RoleUserItem } from "@/types/types";
+import { TableItem, UserDropdownItem, BulkUploadItem, AttributeUploadItem, SMTPUploadItem, AuditTrialItem, RoleUserItem, SupervisorDropdownItem } from "@/types/types";
 import { getWithAuth } from "./apiClient";
 import dayjs from "dayjs";
 
@@ -75,6 +75,23 @@ export const fetchRoleData = async (
     setRoleDropDownData(response);
   } catch (error) {
     console.error("Failed to fetch roles data:", error);
+  }
+};
+
+export const fetchSupervisors = async (
+  setSupervisorDropDownData: React.Dispatch<React.SetStateAction<SupervisorDropdownItem[]>>
+) => {
+  try {
+    const response = await getWithAuth("get-supervisors");
+
+    const mappedData: SupervisorDropdownItem[] = response.map((item: any) => ({
+      id: item?.id,
+      user_name: `${item?.user_details?.first_name} ${item?.user_details?.last_name}`,
+    }));
+
+    setSupervisorDropDownData(mappedData);
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
   }
 };
 

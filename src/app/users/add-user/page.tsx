@@ -11,11 +11,11 @@ import { useRouter } from "next/navigation";
 import { IoClose, IoSaveOutline } from "react-icons/io5";
 import { MdOutlineCancel } from "react-icons/md";
 import { RoleDropdownItem } from "@/types/types";
-import { fetchRoleData,fetchSectors } from "@/utils/dataFetchFunctions";
+import { fetchRoleData,fetchSectors,fetchSupervisors } from "@/utils/dataFetchFunctions";
 import ToastMessage from "@/components/common/Toast";
 import { Input } from "antd";
 import {SectorDropdownItem } from "@/types/types";
-
+import {SupervisorDropdownItem } from "@/types/types";
 
 interface ValidationErrors {
   first_name?: string;
@@ -43,13 +43,18 @@ export default function AllDocTable() {
   const [roleDropDownData, setRoleDropDownData] = useState<RoleDropdownItem[]>(
     []
   );
+    const [supervisorDropDownData, setSupervisorDropDownData] = useState<SupervisorDropdownItem[]>(
+    []
+  );
   const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
   const [roles, setRoles] = useState<string[]>([]);
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<"success" | "error">("success");
   const [toastMessage, setToastMessage] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [selectedSectorId, setSelectedSectorId] = useState<string>("");
+  const [selectedSectorId, setSelectedSectorId] = useState<string>("");3
+  const [selectedSupervisorIds, setSelectedSupervisorIds] = useState<string[]>([]);
+  const [supervisors, setSupervisors] = useState<string[]>([]);
     const [sectorDropDownData, setSectorDropDownData] = useState<
       SectorDropdownItem[]
     >([]);
@@ -62,8 +67,14 @@ export default function AllDocTable() {
   useEffect(() => {
     fetchRoleData(setRoleDropDownData);
     fetchSectors(setSectorDropDownData)
+    fetchSupervisors(setSupervisorDropDownData)
   }, []);
 
+  const selectedRolesNeedApproval = roleDropDownData.some(
+    (role) =>
+      selectedRoleIds.includes(role.id.toString()) &&
+      role.needs_approval === 1
+  );
   useEffect(() => {
   }, [errors]);
 
@@ -81,7 +92,28 @@ export default function AllDocTable() {
       setRoles([...roles, selectedRole.role_name]);
     }
   };
+  const handleSupervisorSelect = (supervisorId: string) => {
+  const selectedSupervisor = supervisorDropDownData.find(
+    (sup) => sup.id.toString() === supervisorId
+  );
 
+  if (selectedSupervisor && !selectedSupervisorIds.includes(supervisorId)) {
+    setSelectedSupervisorIds([...selectedSupervisorIds, supervisorId]);
+    setSupervisors([...supervisors, selectedSupervisor.user_name]);
+  }
+};
+const handleRemoveSupervisor = (name: string) => {
+  const supervisorToRemove = supervisorDropDownData.find(
+    (sup) => sup.user_name === name
+  );
+
+  if (supervisorToRemove) {
+    setSelectedSupervisorIds(
+      selectedSupervisorIds.filter((id) => id !== supervisorToRemove.id.toString())
+    );
+    setSupervisors(supervisors.filter((s) => s !== name));
+  }
+};
   const handleRemoveRole = (roleName: string) => {
     const roleToRemove = roleDropDownData.find(
       (role) => role.role_name === roleName
@@ -138,6 +170,7 @@ export default function AllDocTable() {
     formData.append("password_confirmation", confirmPassword);
     formData.append("role", JSON.stringify(selectedRoleIds));
     formData.append("sector", selectedSectorId);
+    formData.append("supervisors", JSON.stringify(selectedSupervisorIds));
     // for (const [key, value] of formData.entries()) {
     //   console.log(`${key}: ${value}`);
     // }
@@ -368,6 +401,54 @@ export default function AllDocTable() {
                 {errors.sector && <div style={{ color: "red", fontSize: "12px" }}>{errors.sector}</div>}
                 </div>
               </div>
+
+              {selectedRolesNeedApproval && (
+              <div className="col-12 col-lg-6 d-flex flex-column">
+                <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                  Supervisors
+                </p>
+                <div className="d-flex flex-column position-relative">
+                  <DropdownButton
+                    id="dropdown-supervisor-button"
+                    title={
+                      supervisors.length > 0 ? supervisors.join(", ") : "Select Supervisors"
+                    }
+                    className="custom-dropdown-text-start text-start w-100"
+                    onSelect={(value) => {
+                      if (value) handleSupervisorSelect(value);
+                    }}
+                  >
+                    {supervisorDropDownData.length > 0 ? (
+                      supervisorDropDownData.map((supervisor) => (
+                        <Dropdown.Item key={supervisor.id} eventKey={supervisor.id}>
+                          {supervisor.user_name}
+                        </Dropdown.Item>
+                      ))
+                    ) : (
+                      <Dropdown.Item disabled>No supervisors available</Dropdown.Item>
+                    )}
+                  </DropdownButton>
+
+                  {/* Show selected supervisors as badges */}
+                  <div className="mt-1">
+                    {supervisors.map((name, index) => (
+                      <span
+                        key={index}
+                        className="badge bg-info text-dark me-2 p-2 d-inline-flex align-items-center"
+                      >
+                        {name}
+                        <IoClose
+                          className="ms-2"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleRemoveSupervisor(name)}
+                        />
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             </div>
           </div>
 

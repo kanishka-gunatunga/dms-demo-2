@@ -7,8 +7,13 @@ export interface RoleDropdownItem {
   id: number;
   role_name: string;
   permissions: string;
+  needs_approval: number;
 }
 
+export interface SupervisorDropdownItem {
+  id: number;
+  user_name: string;
+}
 export interface CategoryDropdownItem {
   id: number;
   parent_category: string;
