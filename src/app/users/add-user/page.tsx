@@ -344,7 +344,7 @@ const handleRemoveSupervisor = (name: string) => {
                     {roleDropDownData.length > 0 ? (
                       roleDropDownData.map((role) => (
                         <Dropdown.Item key={role.id} eventKey={role.id}>
-                          {role.role_name}
+                          {role.role_name}{role.needs_approval}
                         </Dropdown.Item>
                       ))
                     ) : (
