@@ -79,14 +79,11 @@ export default function AllDocTable({ params }: Props) {
         setMobileNumber(response.user_details.mobile_no?.toString() || "");
         setEmail(response.email || "");
         const roleIds = parseRoles(response.role);
+        const supervisorIds = parseSupervisors(response.supervisors);
         setSelectedSectorId(response.user_details.sector);
         setSelectedRoleIds(roleIds);
-        if (response.supervisors) {
-          const supervisorIds = response.supervisors.map((s: any) => s.id.toString());
-          const supervisorNames = response.supervisors.map((s: any) => s.user_name);
-          setSelectedSupervisorIds(supervisorIds);
-          setSupervisors(supervisorNames);
-        }
+        setSelectedSupervisorIds(supervisorIds);
+
       } catch (error) {
         console.error("Failed to fetch profile data:", error);
       }
@@ -104,7 +101,13 @@ export default function AllDocTable({ params }: Props) {
     }
     return [];
   };
-
+    const parseSupervisors = (supervisorData: any): string[] => {
+    if (typeof supervisorData === "string") {
+      const cleanedData = supervisorData.replace(/[^0-9,]/g, '');
+      return cleanedData.split(',').filter((supervisorId) => supervisorId.trim() !== "");
+    }
+    return [];
+  };
   useEffect(() => {
     const initialRoles = roleDropDownData
       .filter((role) => selectedRoleIds.includes(role.id.toString()))
@@ -112,6 +115,11 @@ export default function AllDocTable({ params }: Props) {
 
     setRoles(initialRoles);
 
+    const initialSupervisors = supervisorDropDownData
+      .filter((sup) => selectedSupervisorIds.includes(sup.id.toString()))
+      .map((sup) => sup.user_name);
+
+    setSupervisors(initialSupervisors);
     // check if any role needs approval
     const needsApproval = roleDropDownData.some(
       (role) => selectedRoleIds.includes(role.id.toString()) && role.needs_approval === 1
@@ -401,7 +409,7 @@ export default function AllDocTable({ params }: Props) {
                           <IoClose
                             className="ms-2"
                             style={{ cursor: "pointer" }}
-                            onClick={() => handleRemoveSupervisor(sup.id.toString())} // Pass role.id here
+                            onClick={() => handleRemoveSupervisor(sup.id.toString())} 
                           />
                         </span>
                       ) : null;
