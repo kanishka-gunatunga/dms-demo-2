@@ -52,7 +52,7 @@ export default function AllDocTable() {
   const [toastType, setToastType] = useState<"success" | "error">("success");
   const [toastMessage, setToastMessage] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [selectedSectorId, setSelectedSectorId] = useState<string>("");3
+  const [selectedSectorId, setSelectedSectorId] = useState<string>("");
   const [selectedSupervisorIds, setSelectedSupervisorIds] = useState<string[]>([]);
   const [supervisors, setSupervisors] = useState<string[]>([]);
     const [sectorDropDownData, setSectorDropDownData] = useState<
