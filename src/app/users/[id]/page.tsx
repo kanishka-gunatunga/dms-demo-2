@@ -389,7 +389,7 @@ export default function AllDocTable({ params }: Props) {
                     ))}
                   </DropdownButton>
                   <div>
-                    {supervisors.map((name, index) => {
+                    {supervisors.map((name) => {
                       const sup = supervisorDropDownData.find((s) => s.user_name === name);
                       return sup ? (
                         <span key={sup.id} className="badge bg-info text-dark me-2 p-2 d-inline-flex align-items-center">
