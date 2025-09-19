@@ -344,7 +344,7 @@ const handleRemoveSupervisor = (name: string) => {
                     {roleDropDownData.length > 0 ? (
                       roleDropDownData.map((role) => (
                         <Dropdown.Item key={role.id} eventKey={role.id}>
-                          {role.role_name}{role.needs_approval}
+                          {role.role_name}
                         </Dropdown.Item>
                       ))
                     ) : (
@@ -412,7 +412,7 @@ const handleRemoveSupervisor = (name: string) => {
               </div>
 
               {selectedRolesNeedApproval && (
-              <div className="col-12 col-lg-6 d-flex flex-column">
+              <div className="col-12 col-lg-6 d-flex flex-column mt-2">
                 <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
                   Supervisors
                 </p>
