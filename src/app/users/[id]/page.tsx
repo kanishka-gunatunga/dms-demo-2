@@ -115,9 +115,9 @@ export default function AllDocTable({ params }: Props) {
 
     setRoles(initialRoles);
 
-    const initialSupervisors = supervisorDropDownData
-      .filter((sup) => selectedSupervisorIds.includes(sup.id.toString()))
-      .map((sup) => sup.user_name);
+     const initialSupervisors = supervisorDropDownData
+    .filter((sup) => selectedSupervisorIds.includes(sup.id.toString()))
+    .map((sup) => sup.user_name);
 
     setSupervisors(initialSupervisors);
     // check if any role needs approval
@@ -131,7 +131,7 @@ export default function AllDocTable({ params }: Props) {
       setSelectedSupervisorIds([]);
       setSupervisors([]);
     }
-  }, [selectedRoleIds, roleDropDownData]);
+  }, [selectedRoleIds, roleDropDownData,selectedSupervisorIds, supervisorDropDownData]);
 
   const handleRoleSelect = (roleId: string) => {
     const selectedRole = roleDropDownData.find(
