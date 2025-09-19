@@ -58,7 +58,7 @@ export default function AllDocTable() {
     const [sectorDropDownData, setSectorDropDownData] = useState<
       SectorDropdownItem[]
     >([]);
-
+const [selectedRolesNeedApproval, setSelectedRolesNeedApproval] = useState(false);
   const router = useRouter();
   const handleSectorSelect = (sectorId: string) => {
     setSelectedSectorId(sectorId);
@@ -70,11 +70,20 @@ export default function AllDocTable() {
     fetchSupervisors(setSupervisorDropDownData)
   }, []);
 
-  const selectedRolesNeedApproval = roleDropDownData.some(
+useEffect(() => {
+  const needsApproval = roleDropDownData.some(
     (role) =>
       selectedRoleIds.includes(role.id.toString()) &&
       role.needs_approval === 1
   );
+  setSelectedRolesNeedApproval(needsApproval);
+
+  // Optionally, clear supervisors if no roles need approval
+  if (!needsApproval) {
+    setSelectedSupervisorIds([]);
+    setSupervisors([]);
+  }
+}, [selectedRoleIds, roleDropDownData]);
   useEffect(() => {
   }, [errors]);
 
