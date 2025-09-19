@@ -382,7 +382,7 @@ export default function AllDocTable({ params }: Props) {
                     id="dropdown-supervisor-button"
                     title={supervisors.length ? supervisors.join(", ") : "Select Supervisors"}
                     onSelect={(value) => value && handleSupervisorSelect(value)}
-                    className="mb-3"
+                    className="custom-dropdown-text-start text-start w-100"
                   >
                     {supervisorDropDownData.map((sup) => (
                       <Dropdown.Item key={sup.id} eventKey={sup.id}>{sup.user_name}</Dropdown.Item>
