@@ -14,10 +14,13 @@ import { MdOutlineCancel } from "react-icons/md";
 import ToastMessage from "@/components/common/Toast";
 import { fetchRoleData, fetchSectors, fetchSupervisors } from "@/utils/dataFetchFunctions";
 import { RoleDropdownItem, SectorDropdownItem, SupervisorDropdownItem } from "@/types/types";
+type Params = {
+  id: string;
+};
 
-type Params = { id: string };
-
-interface Props { params: Params }
+interface Props {
+  params: Params;
+}
 
 interface ValidationErrors {
   first_name?: string;
@@ -25,72 +28,40 @@ interface ValidationErrors {
   mobile_no?: string;
   email?: string;
   role?: string;
-  sector?: string;
-  supervisors?: string;
+  sector?:string;
 }
+
 
 export default function AllDocTable({ params }: Props) {
   const isAuthenticated = useAuth();
-  const router = useRouter();
-  const id = params?.id;
 
-  // form state
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [mobileNumber, setMobileNumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<"success" | "error">("success");
   const [toastMessage, setToastMessage] = useState("");
-
-  // roles
-  const [roleDropDownData, setRoleDropDownData] = useState<RoleDropdownItem[]>([]);
+  const [roleDropDownData, setRoleDropDownData] = useState<RoleDropdownItem[]>(
+    []
+  );
   const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
   const [roles, setRoles] = useState<string[]>([]);
-  const [selectedRolesNeedApproval, setSelectedRolesNeedApproval] = useState(false);
-
-  // sectors
-  const [sectorDropDownData, setSectorDropDownData] = useState<SectorDropdownItem[]>([]);
   const [selectedSectorId, setSelectedSectorId] = useState<string>("");
-
-  // supervisors
+    const [sectorDropDownData, setSectorDropDownData] = useState<
+      SectorDropdownItem[]
+    >([]);
+  const [selectedRolesNeedApproval, setSelectedRolesNeedApproval] = useState(false);
   const [supervisorDropDownData, setSupervisorDropDownData] = useState<SupervisorDropdownItem[]>([]);
   const [selectedSupervisorIds, setSelectedSupervisorIds] = useState<string[]>([]);
   const [supervisors, setSupervisors] = useState<string[]>([]);
 
-  const handleSectorSelect = (sectorId: string) => setSelectedSectorId(sectorId);
+  const router = useRouter();
+  const id = params?.id;
 
-  const handleRoleSelect = (roleId: string) => {
-    const selectedRole = roleDropDownData.find((role) => role.id.toString() === roleId);
-    if (selectedRole && !selectedRoleIds.includes(roleId)) {
-      setSelectedRoleIds((prev) => [...prev, roleId]);
-      setRoles((prev) => [...prev, selectedRole.role_name]);
-    }
-  };
-
-  const handleRemoveRole = (roleId: string) => {
-    const roleToRemove = roleDropDownData.find((role) => role.id.toString() === roleId);
-    if (roleToRemove) {
-      setSelectedRoleIds((prev) => prev.filter((id) => id !== roleToRemove.id.toString()));
-      setRoles((prev) => prev.filter((r) => r !== roleToRemove.role_name));
-    }
-  };
-
-  const handleSupervisorSelect = (supervisorId: string) => {
-    const selectedSupervisor = supervisorDropDownData.find((sup) => sup.id.toString() === supervisorId);
-    if (selectedSupervisor && !selectedSupervisorIds.includes(supervisorId)) {
-      setSelectedSupervisorIds((prev) => [...prev, supervisorId]);
-      setSupervisors((prev) => [...prev, selectedSupervisor.user_name]);
-    }
-  };
-
-  const handleRemoveSupervisor = (supervisorId: string) => {
-    const supervisorToRemove = supervisorDropDownData.find((sup) => sup.id.toString() === supervisorId);
-    if (supervisorToRemove) {
-      setSelectedSupervisorIds((prev) => prev.filter((id) => id !== supervisorId));
-      setSupervisors((prev) => prev.filter((name) => name !== supervisorToRemove.user_name));
-    }
+  const handleSectorSelect = (sectorId: string) => {
+    setSelectedSectorId(sectorId);
   };
 
   useEffect(() => {
@@ -100,8 +71,6 @@ export default function AllDocTable({ params }: Props) {
   }, []);
 
   useEffect(() => {
-    if (!id) return;
-
     const fetchUserDetails = async () => {
       try {
         const response = await getWithAuth(`user-details/${id}`);
@@ -109,13 +78,9 @@ export default function AllDocTable({ params }: Props) {
         setLastName(response.user_details.last_name || "");
         setMobileNumber(response.user_details.mobile_no?.toString() || "");
         setEmail(response.email || "");
-        setSelectedSectorId(response.user_details.sector);
-
-        // roles
         const roleIds = parseRoles(response.role);
+        setSelectedSectorId(response.user_details.sector);
         setSelectedRoleIds(roleIds);
-
-        // supervisors
         if (response.supervisors) {
           const supervisorIds = response.supervisors.map((s: any) => s.id.toString());
           const supervisorNames = response.supervisors.map((s: any) => s.user_name);
@@ -127,8 +92,18 @@ export default function AllDocTable({ params }: Props) {
       }
     };
 
-    fetchUserDetails();
+    if (id) {
+      fetchUserDetails();
+    }
   }, [id]);
+
+  const parseRoles = (roleData: any): string[] => {
+    if (typeof roleData === "string") {
+      const cleanedData = roleData.replace(/[^0-9,]/g, '');
+      return cleanedData.split(',').filter((roleId) => roleId.trim() !== "");
+    }
+    return [];
+  };
 
   useEffect(() => {
     const initialRoles = roleDropDownData
@@ -150,27 +125,64 @@ export default function AllDocTable({ params }: Props) {
     }
   }, [selectedRoleIds, roleDropDownData]);
 
-  const parseRoles = (roleData: any): string[] => {
-    if (typeof roleData === "string") {
-      const cleanedData = roleData.replace(/[^0-9,]/g, '');
-      return cleanedData.split(',').filter((roleId) => roleId.trim() !== "");
+  const handleRoleSelect = (roleId: string) => {
+    const selectedRole = roleDropDownData.find(
+      (role) => role.id.toString() === roleId
+    );
+
+    if (selectedRole && !selectedRoleIds.includes(roleId)) {
+      setSelectedRoleIds((prev) => [...prev, roleId]);
+      setRoles((prev) => [...prev, selectedRole.role_name]);
     }
-    return [];
   };
+
+  const handleRemoveRole = (roleId: string) => {
+    const roleToRemove = roleDropDownData.find(
+      (role) => role.id.toString() === roleId
+    );
+
+    if (roleToRemove) {
+      setSelectedRoleIds((prev) =>
+        prev.filter((id) => id !== roleToRemove.id.toString())
+      );
+      setRoles((prev) => prev.filter((r) => r !== roleToRemove.role_name));
+    }
+  };
+
+  const handleSupervisorSelect = (supervisorId: string) => {
+    const selectedSupervisor = supervisorDropDownData.find((sup) => sup.id.toString() === supervisorId);
+    if (selectedSupervisor && !selectedSupervisorIds.includes(supervisorId)) {
+      setSelectedSupervisorIds((prev) => [...prev, supervisorId]);
+      setSupervisors((prev) => [...prev, selectedSupervisor.user_name]);
+    }
+  };
+
+  const handleRemoveSupervisor = (supervisorId: string) => {
+    const supervisorToRemove = supervisorDropDownData.find((sup) => sup.id.toString() === supervisorId);
+    if (supervisorToRemove) {
+      setSelectedSupervisorIds((prev) => prev.filter((id) => id !== supervisorId));
+      setSupervisors((prev) => prev.filter((name) => name !== supervisorToRemove.user_name));
+    }
+  };
+
+  if (!isAuthenticated) {
+    return <LoadingSpinner />;
+  }
+
 
   const validateFields = (): ValidationErrors => {
     const newErrors: ValidationErrors = {};
+
     if (!firstName.trim()) newErrors.first_name = "First name is required.";
     if (!lastName.trim()) newErrors.last_name = "Last name is required.";
     if (!mobileNumber.trim()) newErrors.mobile_no = "Mobile number is required.";
     if (!email.trim()) newErrors.email = "Email is required.";
-    if (!selectedRoleIds.length) newErrors.role = "At least select one role.";
+    if (!JSON.stringify(selectedRoleIds)) newErrors.role = "At least select one role.";
     if (!selectedSectorId) newErrors.sector = "Sector is required.";
-    if (selectedRolesNeedApproval && !selectedSupervisorIds.length) newErrors.supervisors = "At least select one supervisor.";
     return newErrors;
   };
-
   const handleSubmit = async () => {
+
     const fieldErrors = validateFields();
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
@@ -184,26 +196,29 @@ export default function AllDocTable({ params }: Props) {
     formData.append("email", email);
     formData.append("role", JSON.stringify(selectedRoleIds));
     formData.append("sector", selectedSectorId);
-    formData.append("supervisors", JSON.stringify(selectedSupervisorIds));
-
+     formData.append("supervisors", JSON.stringify(selectedSupervisorIds));
+    
     try {
       const response = await postWithAuth(`user-details/${id}`, formData);
-
       if (response.status === "fail") {
         setToastType("error");
         setToastMessage("Failed to update user!");
-      } else {
-        setToastType("success");
-        setToastMessage("User updated successfully!");
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+        }, 5000);
       }
+      setToastType("success");
+      setToastMessage("User Updated successfully!");
       setShowToast(true);
-      setTimeout(() => setShowToast(false), 5000);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 5000);
+      // setSuccess("Form submitted successfully");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
-
-  if (!isAuthenticated) return <LoadingSpinner />;
 
   return (
     <>
@@ -213,105 +228,153 @@ export default function AllDocTable({ params }: Props) {
         </div>
 
         <div className="d-flex flex-column bg-white p-2 p-lg-3 rounded mt-3">
-          <div style={{ maxHeight: "380px", overflowY: "auto" }} className="custom-scroll">
+          <div
+            style={{ maxHeight: "380px", overflowY: "auto" }}
+            className="custom-scroll"
+          >
             <div className="p-0 row row-cols-1 row-cols-md-2 overflow-hidden w-100">
-              {/* First Name */}
               <div className="d-flex flex-column">
-                <p className="mb-1" style={{ fontSize: "14px" }}>First Name</p>
-                <input
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className={`${errors.first_name ? "is-invalid" : ""} form-control mb-3`}
-                />
-                {errors.first_name && <div className="invalid-feedback">{errors.first_name}</div>}
-              </div>
-
-              {/* Last Name */}
-              <div className="d-flex flex-column">
-                <p className="mb-1" style={{ fontSize: "14px" }}>Last Name</p>
-                <input
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  className={`${errors.last_name ? "is-invalid" : ""} form-control mb-3`}
-                />
-                {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
-              </div>
-
-              {/* Mobile */}
-              <div className="d-flex flex-column">
-                <p className="mb-1" style={{ fontSize: "14px" }}>Mobile Number</p>
-                <input
-                  type="number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  className={`${errors.mobile_no ? "is-invalid" : ""} form-control mb-3`}
-                />
-                {errors.mobile_no && <div className="invalid-feedback">{errors.mobile_no}</div>}
-              </div>
-
-              {/* Email */}
-              <div className="d-flex flex-column">
-                <p className="mb-1" style={{ fontSize: "14px" }}>Email</p>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`${errors.email ? "is-invalid" : ""} form-control mb-3`}
-                />
-                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-              </div>
-
-              {/* Roles */}
-              <div className="col-12 col-lg-6 d-flex flex-column">
-                <p className="mb-1">Roles</p>
-                <DropdownButton
-                  id="dropdown-role-button"
-                  title={roles.length ? roles.join(", ") : "Select Roles"}
-                  className="mb-3"
-                  onSelect={(value) => value && handleRoleSelect(value)}
-                >
-                  {roleDropDownData.map((role) => (
-                    <Dropdown.Item key={role.id} eventKey={role.id}>
-                      {role.role_name}
-                    </Dropdown.Item>
-                  ))}
-                </DropdownButton>
-                {errors.role && <div style={{ color: "red", fontSize: "12px" }}>{errors.role}</div>}
-                <div>
-                  {roles.map((roleName) => {
-                    const role = roleDropDownData.find((r) => r.role_name === roleName);
-                    if (!role) return null;
-                    return (
-                      <span key={role.id} className="badge bg-primary text-light me-2 p-2 d-inline-flex align-items-center">
-                        {roleName}
-                        <IoClose style={{ cursor: "pointer" }} onClick={() => handleRemoveRole(role.id.toString())} />
-                      </span>
-                    );
-                  })}
+                <p className="mb-1" style={{ fontSize: "14px" }}>
+                  First Name
+                </p>
+                <div className="input-group mb-3 pe-lg-4">
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className={`${errors.first_name ? "is-invalid" : ""} form-control`}
+                  />
+                  {errors.first_name && <div className="invalid-feedback">{errors.first_name}</div>}
                 </div>
               </div>
+              <div className="d-flex flex-column">
+                <p className="mb-1" style={{ fontSize: "14px" }}>
+                  Last Name
+                </p>
+                <div className="input-group mb-3 pe-lg-4">
+                  <input
+                    type="text"
+                    className={`${errors.last_name ? "is-invalid" : ""} form-control`}
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                  {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
+                </div>
+              </div>
+              <div className="d-flex flex-column">
+                <p className="mb-1" style={{ fontSize: "14px" }}>
+                  Mobile Number
+                </p>
+                <div className="input-group mb-3 pe-lg-4">
+                  <input
+                    type="number"
+                    className={`${errors.mobile_no ? "is-invalid" : ""} form-control`}
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                  />
+                  {errors.mobile_no && <div className="invalid-feedback">{errors.mobile_no}</div>}
+                </div>
+              </div>
+              <div className="d-flex flex-column">
+                <p className="mb-1" style={{ fontSize: "14px" }}>
+                  Email
+                </p>
+                <div className="input-group mb-3 pe-lg-4">
+                  <input
+                    type="email"
+                    className={`${errors.email ? "is-invalid" : ""} form-control`}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                </div>
+              </div>
+              <div className="d-flex flex-column">
+                <p className="mb-1" style={{ fontSize: "14px" }}>
+                  Roles
+                </p>
+                <div className="mb-3 pe-lg-4">
+                  <DropdownButton
+                    id="dropdown-category-button"
+                    title={roles.length > 0 ? roles.join(", ") : "Select Roles"}
+                    className="custom-dropdown-text-start text-start w-100"
+                    onSelect={(value) => {
+                      if (value) handleRoleSelect(value);
+                    }}
+                  >
+                    {roleDropDownData.length > 0 ? (
+                      roleDropDownData.map((role) => (
+                        <Dropdown.Item key={role.id} eventKey={role.id}>
+                          {role.role_name}
+                        </Dropdown.Item>
+                      ))
+                    ) : (
+                      <Dropdown.Item disabled>No Roles available</Dropdown.Item>
+                    )}
+                  </DropdownButton>
 
-              {/* Sector */}
+                  {errors.role && <div className="invalid-feedback">{errors.role}</div>}
+
+                  <div className="mt-1">
+                    {roles.map((roleName, index) => {
+                      const role = roleDropDownData.find((r) => r.role_name === roleName);
+                      return role ? (
+                        <span
+                          key={index}
+                          className="badge bg-primary text-light me-2 p-2 d-inline-flex align-items-center"
+                        >
+                          {roleName}
+                          <IoClose
+                            className="ms-2"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveRole(role.id.toString())} // Pass role.id here
+                          />
+                        </span>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
+
+              </div>
               <div className="col-12 col-lg-6 d-flex flex-column">
-                <p className="mb-1">Sector</p>
-                <DropdownButton
-                  id="dropdown-sector-button"
-                  title={selectedSectorId ? sectorDropDownData.find(s => s.id.toString() === selectedSectorId)?.sector_name : "Select Sector"}
+                <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                  Sector
+                </p>
+                <div className="d-flex flex-column position-relative">
+                  <DropdownButton
+                  id="dropdown-category-button"
+                  title={
+                    selectedSectorId
+                      ? sectorDropDownData.find(
+                        (item) => item.id.toString() === selectedSectorId
+                      )?.sector_name
+                      : "Select Sector"
+                  }
+                  className="custom-dropdown-text-start text-start w-100"
                   onSelect={(value) => handleSectorSelect(value || "")}
-                  className="mb-3"
                 >
                   {sectorDropDownData.map((sector) => (
-                    <Dropdown.Item key={sector.id} eventKey={sector.id.toString()} style={{ fontWeight: sector.parent_sector === "none" ? "bold" : "normal", paddingLeft: sector.parent_sector === "none" ? "10px" : "20px" }}>
+                    <Dropdown.Item
+                      key={sector.id}
+                      eventKey={sector.id.toString()}
+                      style={{
+                        fontWeight:
+                          sector.parent_sector === "none"
+                            ? "bold"
+                            : "normal",
+                        paddingLeft:
+                          sector.parent_sector === "none"
+                            ? "10px"
+                            : "20px",
+                      }}
+                    >
                       {sector.sector_name}
                     </Dropdown.Item>
                   ))}
                 </DropdownButton>
                 {errors.sector && <div style={{ color: "red", fontSize: "12px" }}>{errors.sector}</div>}
+                </div>
               </div>
-
-              {/* Supervisors */}
               {selectedRolesNeedApproval && (
                 <div className="col-12 col-lg-6 d-flex flex-column">
                   <p className="mb-1">Supervisors</p>
@@ -325,9 +388,8 @@ export default function AllDocTable({ params }: Props) {
                       <Dropdown.Item key={sup.id} eventKey={sup.id}>{sup.user_name}</Dropdown.Item>
                     ))}
                   </DropdownButton>
-                  {errors.supervisors && <div style={{ color: "red", fontSize: "12px" }}>{errors.supervisors}</div>}
                   <div>
-                    {supervisors.map((name) => {
+                    {supervisors.map((name, index) => {
                       const sup = supervisorDropDownData.find((s) => s.user_name === name);
                       return sup ? (
                         <span key={sup.id} className="badge bg-info text-dark me-2 p-2 d-inline-flex align-items-center">
@@ -339,20 +401,33 @@ export default function AllDocTable({ params }: Props) {
                   </div>
                 </div>
               )}
-
+              <div className="d-flex"></div>
             </div>
           </div>
-
-          {/* Submit Buttons */}
           <div className="d-flex flex-row mt-5">
-            <button className="btn btn-success me-2" onClick={handleSubmit}><IoSaveOutline /> Save</button>
-            <button className="btn btn-danger" onClick={() => router.push("/users")}><MdOutlineCancel /> Cancel</button>
+            <button
+              onClick={handleSubmit}
+              className="custom-icon-button button-success px-3 py-1 rounded me-2"
+            >
+              <IoSaveOutline fontSize={16} className="me-1" /> Save
+            </button>
+            <button
+              onClick={() => router.push("/users")}
+              className="custom-icon-button button-danger text-white bg-danger px-3 py-1 rounded"
+            >
+              <MdOutlineCancel fontSize={16} className="me-1" /> Cancel
+            </button>
           </div>
         </div>
       </DashboardLayout>
-
-      {/* Toast */}
-      <ToastMessage message={toastMessage} show={showToast} onClose={() => setShowToast(false)} type={toastType} />
+      {/* toast message */}
+      <ToastMessage
+        message={toastMessage}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+        type={toastType}
+      />
     </>
   );
 }
+
