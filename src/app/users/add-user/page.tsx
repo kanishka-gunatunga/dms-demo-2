@@ -443,7 +443,7 @@ const handleRemoveSupervisor = (name: string) => {
                     {supervisors.map((name, index) => (
                       <span
                         key={index}
-                        className="badge bg-info text-dark me-2 p-2 d-inline-flex align-items-center"
+                        className="badge bg-primary text-light me-2 p-2 d-inline-flex align-items-center"
                       >
                         {name}
                         <IoClose
