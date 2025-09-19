@@ -388,13 +388,21 @@ export default function AllDocTable({ params }: Props) {
                       <Dropdown.Item key={sup.id} eventKey={sup.id}>{sup.user_name}</Dropdown.Item>
                     ))}
                   </DropdownButton>
-                  <div>
-                    {supervisors.map((name) => {
-                      const sup = supervisorDropDownData.find((s) => s.user_name === name);
+
+                  <div className="mt-1">
+                    {supervisors.map((supervisorName, index) => {
+                      const sup = supervisorDropDownData.find((r) => r.user_name === supervisorName);
                       return sup ? (
-                        <span key={sup.id} className="badge bg-info text-dark me-2 p-2 d-inline-flex align-items-center">
-                          {name}
-                          <IoClose style={{ cursor: "pointer" }} onClick={() => handleRemoveSupervisor(sup.id.toString())} />
+                        <span
+                          key={index}
+                          className="badge bg-primary text-light me-2 p-2 d-inline-flex align-items-center"
+                        >
+                          {supervisorName}
+                          <IoClose
+                            className="ms-2"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRemoveSupervisor(sup.id.toString())} // Pass role.id here
+                          />
                         </span>
                       ) : null;
                     })}
