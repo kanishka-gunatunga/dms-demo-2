@@ -2777,7 +2777,7 @@ export default function AllDocTable() {
                   type="file"
                   className="form-control p-1"
                   id="newVersionDocument"
-                  accept=".pdf,.doc,.docx,.png,.jpg"
+          
                   onChange={handleNewVersionFileChange}
                   required
                 ></input>
