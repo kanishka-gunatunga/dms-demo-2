@@ -42,6 +42,16 @@ export const fetchDocumentsData = async (
     console.error("Failed to fetch documents data:", error);
   }
 };
+export const fetchUnapprovedDocumentsData = async (
+  setDummyData: React.Dispatch<React.SetStateAction<any>>
+) => {
+  try {
+    const response = await getWithAuth("unapproved-documents");
+    setDummyData(response);
+  } catch (error) {
+    console.error("Failed to fetch documents data:", error);
+  }
+};
 
 export const fetchAssignedDocumentsData = async (
   setDummyData: React.Dispatch<React.SetStateAction<any>>
