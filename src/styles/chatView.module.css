@@ -20,6 +20,7 @@
 
 .chat_body_container {
     flex: 1;
+    overflow: auto;
 }
 
 .chat_body {
