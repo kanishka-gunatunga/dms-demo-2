@@ -10,7 +10,7 @@ import InfoModal from "@/components/common/InfoModel";
 import useAuth from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { useEffect, useState } from "react";
-import { fetchRemindersData } from "@/utils/dataFetchFunctions";
+import { fetchRemindersData,fetchDocumentCategoryWithCount } from "@/utils/dataFetchFunctions";
 import { Badge, Calendar } from "antd";
 import type { BadgeProps, CalendarProps } from "antd";
 import type { Dayjs } from "dayjs";
@@ -56,8 +56,20 @@ export default function Home() {
   // ]);
 
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
+  const [categoriesData, setCategoriesData] = useState<{id: number, category_name: string, documents_count: number}[]>([]);
+  const [pieData, setPieData] = useState<{name: string, value: number, color: string}[]>([]);
 
-
+  useEffect(() => {
+    fetchDocumentCategoryWithCount(setCategoriesData);
+  }, []);
+    useEffect(() => {
+    const data = categoriesData.map((category) => ({
+      name: category.category_name,
+      value: category.documents_count,
+      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // random color
+    }));
+    setPieData(data);
+  }, [categoriesData]);
   useEffect(() => {
     // const transformRemindersToDates = (reminders: any[]) => {
     //   return reminders.map((reminder) => ({
@@ -135,24 +147,19 @@ export default function Home() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={data01}
+                  data={pieData}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
                   label
-                  outerRadius={80}
+                  outerRadius={100}
                 >
-                  {data01.map((entry, index) => (
+                  {pieData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Legend
-                  layout="vertical"
-                  align="right"
-                  verticalAlign="middle"
-                  height={36}
-                />
+                <Legend layout="vertical" align="right" verticalAlign="middle" height={36} />
               </PieChart>
             </ResponsiveContainer>
           </div>

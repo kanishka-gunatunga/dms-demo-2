@@ -356,6 +356,16 @@ export const fetchAndMapAttributeTableData = async (
   }
 };
 
+export const fetchDocumentCategoryWithCount = async (
+  setDocumentCategoryWithCountData: React.Dispatch<React.SetStateAction<any>>
+) => {
+  try {
+    const response = await getWithAuth("categories-with-doc-count");
+    setDocumentCategoryWithCountData(response);
+  } catch (error) {
+    console.error("Failed to fetch doc data:", error);
+  }
+};
 
 export const fetchRemindersData = async (
   setSelectedDates: React.Dispatch<React.SetStateAction<any>>
