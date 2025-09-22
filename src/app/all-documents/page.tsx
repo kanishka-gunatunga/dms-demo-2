@@ -1566,6 +1566,7 @@ export default function AllDocTable() {
       }
       console.log("Sending POST request to:", `document-share/${id}`);
       const response = await postWithAuth(`document-share/${id}`, formData);
+         console.log("API response:", response);
       setShareDocumentData(null);
       setUsers([]);
       setSelectedUserIds([]);
