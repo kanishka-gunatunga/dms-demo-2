@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TableItem, UserDropdownItem, BulkUploadItem, AttributeUploadItem, SMTPUploadItem, AuditTrialItem, RoleUserItem, SupervisorDropdownItem } from "@/types/types";
+import { TableItem, UserDropdownItem, BulkUploadItem, AttributeUploadItem, SMTPUploadItem, AuditTrialItem, RoleUserItem, SupervisorDropdownItem,ApprovalHistoryItem } from "@/types/types";
 import { getWithAuth } from "./apiClient";
 import dayjs from "dayjs";
 
@@ -258,6 +258,29 @@ export const fetchDocumentAuditTrail = async (
   }
 };
 
+export const fetchDocumentApprovalHistory = async (
+  setDummyData: React.Dispatch<React.SetStateAction<ApprovalHistoryItem[]>>
+) => {
+  try {
+    const response = await getWithAuth("approval-history");
+
+    // Map the data to the TableItem interface
+    const mappedData = response.map((item: any): ApprovalHistoryItem => ({
+      id: item?.id,
+      operation: item?.operation,
+      category: item?.category || 'No Category',
+      type: item?.type,
+      user: item?.user,
+      changed_source: item?.changed_source,
+      date_time: item?.date_time,
+      document_name: item?.document_name,
+    }));
+
+    setDummyData(mappedData);
+  } catch (error) {
+    console.error("Failed to fetch archived documents data:", error);
+  }
+};
 
 export const fetchAndMapBulkUploadTableData = async (
   setTableData: React.Dispatch<React.SetStateAction<BulkUploadItem[]>>

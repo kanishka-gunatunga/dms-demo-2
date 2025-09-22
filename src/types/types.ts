@@ -131,6 +131,17 @@ export interface AuditTrialItem {
   asigned_users: string;
   asigned_roles: string;
 }
+export interface ApprovalHistoryItem {
+  id: number;
+  operation: string;
+  category: string;
+  type: string;
+  user: string;
+  changed_source: string;
+  date_time: string;
+  document_name: string;
+
+}
 
 export const ItemTypes = {
   USER: "user",
