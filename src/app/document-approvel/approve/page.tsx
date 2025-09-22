@@ -43,6 +43,7 @@ import {
   MdArrowDropUp,
   MdEmail,
   MdFileDownload,
+  MdCheck,
   MdModeEditOutline,
   MdOutlineCancel,
   MdOutlineInsertLink,
@@ -185,6 +186,7 @@ const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
   const [modalStates, setModalStates] = useState({
     viewModel: false,
     deleteFileModel: false,
+    docApproveModel: false,
   });
 
 
@@ -302,7 +304,38 @@ const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
         }, 5000);
       }
     };
-
+    const handleDocumentApprove = async (id: number, userId: string) => {
+        try {
+          const formData = new FormData();
+          formData.append("user", userId);
+          const response = await postWithAuth(`document-approve/${id}`, formData);
+          if (response.status === "success") {
+            handleCloseModal("docApproveModel");
+            setToastType("success");
+            setToastMessage("Document approved successfully!");
+            setShowToast(true);
+            setTimeout(() => {
+              setShowToast(false);
+            }, 5000);
+          } else {
+            setToastType("error");
+            setToastMessage("An error occurred while approving the document!");
+            setShowToast(true);
+            setTimeout(() => {
+              setShowToast(false);
+            }, 5000);
+          }
+          fetchUnapprovedDocumentsData(setDummyData);
+        } catch (error) {
+          setToastType("error");
+          setToastMessage("An error occurred while approving the document!");
+          setShowToast(true);
+          setTimeout(() => {
+            setShowToast(false);
+          }, 5000);
+          // console.error("Error archiving document:", error);
+        }
+      };
   const handleMouseMove = (e: React.MouseEvent<HTMLTableRowElement>) => {
     setCursorPosition({ x: e.clientX, y: e.clientY });
   };
@@ -419,10 +452,14 @@ const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
                                   href={"#"}
                                   style={{ color: "#212529" }}
                                   onClick={() =>
-                                    handleDownload(item.id, userId)
+                                    handleOpenModal(
+                                    "docApproveModel",
+                                    item.id,
+                                    item.name
+                                  )
                                   }
                                 >
-                                  <MdFileDownload className="me-2" />
+                                  <MdCheck className="me-2" />
                                   Approve
                                 </Link>
                               </Dropdown.Item>
@@ -778,7 +815,60 @@ const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
           </Modal.Footer>
         </Modal>
 
-        
+        {/* approve document model */}
+                <Modal
+                  centered
+                  show={modalStates.docApproveModel}
+                  onHide={() => {
+                    handleCloseModal("docApproveModel");
+                    setSelectedDocumentId(null);
+                    setSelectedDocumentName(null);
+                  }}
+                >
+                  <Modal.Header>
+                    <div className="d-flex w-100 justify-content-end">
+                      <div className="col-11">
+                        <p className="mb-1" style={{ fontSize: "16px", color: "#333" }}>
+                          Are you sure you want to approve?
+                        </p>
+                      </div>
+                      <div className="col-1 d-flex justify-content-end">
+                        <IoClose
+                          fontSize={20}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleCloseModal("docApproveModel")}
+                        />
+                      </div>
+                    </div>
+                  </Modal.Header>
+                  <Modal.Body className="py-3">
+                    <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                      {selectedDocumentName || "No document selected"}
+                    </p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <div className="d-flex flex-row">
+                      <button
+                        onClick={() =>
+                          handleDocumentApprove(selectedDocumentId!, userId!)
+                        }
+                        className="custom-icon-button button-success px-3 py-1 rounded me-2"
+                      >
+                        <IoSaveOutline fontSize={16} className="me-1" /> Yes
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleCloseModal("docApproveModel");
+                          setSelectedDocumentId(null);
+                          setSelectedDocumentName(null);
+                        }}
+                        className="custom-icon-button button-danger text-white bg-danger px-3 py-1 rounded"
+                      >
+                        <MdOutlineCancel fontSize={16} className="me-1" /> Cancel
+                      </button>
+                    </div>
+                  </Modal.Footer>
+                </Modal>
         {/* toast message */}
         <ToastMessage
           message={toastMessage}
