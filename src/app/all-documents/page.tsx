@@ -2016,7 +2016,7 @@ export default function AllDocTable() {
                             display: "flex",
                             alignSelf: "center",
                             justifySelf: "center",
-                          }} 
+                          }}
                         />
                       )} */}
                       {selectedItems.length > 0 ? (
@@ -2923,6 +2923,7 @@ export default function AllDocTable() {
                     <DatePicker
                       showTime
                       className={`w-100`}
+                      dropdownClassName="custom-datepicker-popup"
                       onChange={(value, dateString) => {
                         handleShareInputChange(
                           "expire_date_time",
