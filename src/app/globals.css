@@ -927,5 +927,5 @@ iframe #WordViewerStatusBar {
   }
 }
 .ql-editor{
-  white-space: unset;
+  white-space: unset !important;
 }
