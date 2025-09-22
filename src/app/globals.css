@@ -895,3 +895,34 @@ iframe #WordViewerStatusBar {
 .searched-text em{
   background-color: #ece92d;
 }
+
+
+
+
+
+.custom-datepicker-popup .ant-picker-panel-container {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+
+.custom-datepicker-popup .ant-picker-panel-container::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-datepicker-popup .ant-picker-panel-container::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+
+
+@media (max-width: 767px) {
+  .custom-datepicker-popup .ant-picker-panel-container {
+    max-height: 40vh;
+    overflow-x: auto;
+    max-width: 380px;
+  }
+
+  .custom-datepicker-popup .ant-picker-panel-container::-webkit-scrollbar {
+    width: 4px;
+  }
+}
