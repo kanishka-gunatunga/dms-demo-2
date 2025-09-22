@@ -1540,12 +1540,12 @@ export default function AllDocTable() {
       formData.append("type", "user");
       if (modalStates.shareAssignUserModel) {
         formData.append(
-          "assigned_roles_or_user",
+          "assigned_roles_or_users",
           JSON.stringify(selectedUserIds) || ""
         );
       } else if (modalStates.shareAssignRoleModel) {
         formData.append(
-          "assigned_roles_or_user",
+          "assigned_roles_or_users",
           JSON.stringify(selectedRoleIds) || ""
         );
       }
@@ -1607,12 +1607,12 @@ export default function AllDocTable() {
       formData.append("type", "role");
       if (modalStates.shareAssignUserModel) {
         formData.append(
-          "assigned_roles_or_user",
+          "assigned_roles_or_users",
           JSON.stringify(selectedUserIds) || ""
         );
       } else if (modalStates.shareAssignRoleModel) {
         formData.append(
-          "assigned_roles_or_user",
+          "assigned_roles_or_users",
           JSON.stringify(selectedRoleIds) || ""
         );
       }

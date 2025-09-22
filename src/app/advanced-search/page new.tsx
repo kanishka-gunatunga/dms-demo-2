@@ -1344,9 +1344,9 @@ export default function AllDocTable() {
       const formData = new FormData();
       formData.append("type", 'user');
       if (modalStates.shareAssignUserModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedUserIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedUserIds) || '');
       } else if (modalStates.shareAssignRoleModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedRoleIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedRoleIds) || '');
       }
       formData.append("is_time_limited", shareDocumentData?.is_time_limited || "");
       formData.append("start_date_time", selectedStartDateTime || "");
@@ -1399,9 +1399,9 @@ export default function AllDocTable() {
       const formData = new FormData();
       formData.append("type", "role");
       if (modalStates.shareAssignUserModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedUserIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedUserIds) || '');
       } else if (modalStates.shareAssignRoleModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedRoleIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedRoleIds) || '');
       }
       formData.append("is_time_limited", shareDocumentData?.is_time_limited || "");
       formData.append("start_date_time", selectedStartDateTime || "");
