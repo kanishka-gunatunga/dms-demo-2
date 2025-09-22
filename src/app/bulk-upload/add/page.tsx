@@ -270,6 +270,26 @@ export default function AllDocTable() {
           setShowToast(false);
         }, 5000);
       }
+       setIsProcessing(true);
+      const processDocResponse = await getWithAuth("process-documents");
+      if (processDocResponse.status === "success") {
+        setIsProcessing(false);
+        setToastType("success");
+        setToastMessage("Indexing complete");
+        setShowToast(true);
+          setTimeout(() => {
+            setShowToast(false);
+          }, 2000);
+      } else {
+        setIsProcessing(false);
+        setToastType("error");
+        setToastMessage("Fail to index documents");
+        setShowToast(true);
+          setTimeout(() => {
+            setShowToast(false);
+          }, 2000);
+      }
+   
     } catch (error) {
       setError("Failed to upload the documents!");
       setToastType("error");
