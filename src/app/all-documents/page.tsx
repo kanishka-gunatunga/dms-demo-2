@@ -1560,7 +1560,10 @@ export default function AllDocTable() {
         shareDocumentData?.is_downloadable || ""
       );
       formData.append("user", userId || "");
-
+        console.log("FormData contents:");
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
       const response = await postWithAuth(`document-share/${id}`, formData);
       setShareDocumentData(null);
       setUsers([]);
