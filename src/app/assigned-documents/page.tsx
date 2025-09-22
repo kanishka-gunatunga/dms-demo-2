@@ -5144,7 +5144,7 @@ export default function AllDocTable() {
                       {paginatedDataReminder.length > 0 ? (
                         paginatedDataReminder.map((item) => (
                           <tr key={item.id}>
-                            <td className="d-flex flex-row">
+                            <td className="d-flex flex-row" style={{marginTop:"100px"}}>
                               {hasPermission(permissions, "Reminder", "Edit Reminder") && (
                                 <button
                                   onClick={() => {
