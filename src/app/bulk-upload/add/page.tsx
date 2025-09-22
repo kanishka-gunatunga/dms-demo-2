@@ -1052,7 +1052,11 @@ export default function AllDocTable() {
 
 
 
-
+                        {isProcessing && (
+                <span className="loading-container">
+                    Please wait unitll we process your documents <span className="dots"><span>{'>'}</span><span>{'>'}</span><span>{'>'}</span></span>
+                </span>
+                )}
 
                 <div className="d-flex flex-row mt-5">
                   <button
