@@ -561,7 +561,7 @@ const filteredNavItems = navItems
           </Nav>
         </div>
 
-        <Container fluid className="mt-0">
+        <Container fluid className="mt-0 overflow-scroll">
           {children}
         </Container>
       </div>
