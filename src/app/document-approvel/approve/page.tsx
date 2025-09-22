@@ -219,13 +219,15 @@ const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
   };
 
   const handleOpenModal = (
-    modalName: keyof typeof modalStates,
-    documentId?: number,
-    documentName?: string
-  ) => {
+  modalName: keyof typeof modalStates,
+  documentId?: number,
+  documentName?: string
+) => {
+  if (documentId) setSelectedDocumentId(documentId);
+  if (documentName) setSelectedDocumentName(documentName);
 
-    setModalStates((prev) => ({ ...prev, [modalName]: true }));
-  };
+  setModalStates((prev) => ({ ...prev, [modalName]: true }));
+};
 
   const handleCloseModal = (modalName: keyof typeof modalStates) => {
     setModalStates((prev) => ({ ...prev, [modalName]: false }));
