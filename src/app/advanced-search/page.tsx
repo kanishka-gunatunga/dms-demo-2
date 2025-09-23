@@ -2383,6 +2383,7 @@ export default function AllDocTable() {
                     <DatePicker
                       showTime
                       className={`w-100`}
+                      dropdownClassName="custom-datepicker-popup"
                       onChange={(value, dateString) => {
                         handleShareInputChange("expire_date_time", `${dateString}`)
                       }}
@@ -2619,6 +2620,7 @@ export default function AllDocTable() {
                       <DatePicker
                         showTime
                         className="w-100"
+                        dropdownClassName="custom-datepicker-popup"
                         defaultValue={
                           shareableLinkDataSetting.expire_date_time
                             ? dayjs(shareableLinkDataSetting.expire_date_time, "YYYY-MM-DD HH:mm:ss")
