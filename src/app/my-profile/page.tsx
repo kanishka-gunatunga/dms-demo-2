@@ -175,38 +175,52 @@ export default function AllDocTable({ }: Props) {
     };
 
     const handleResetPassword = async () => {
-        if (validateForm()) {
-            const formData = new FormData();
-            formData.append("email", email || "");
-            formData.append("current_password", currentPassword);
-            formData.append("password", password);
-            formData.append("password_confirmation", confirmPassword);
+  if (validateForm()) {
+    const formData = new FormData();
+    formData.append("email", email || "");
+    formData.append("current_password", currentPassword);
+    formData.append("password", password);
+    formData.append("password_confirmation", confirmPassword);
 
-            try {
-                const response = await postWithAuth("update-password", formData);
-                // console.log("Form submitted successfully:", response);
-                if (response.status === "fail") {
-                    setToastType("error");
-                    setToastMessage("Failed to reset password!");
-                    setShowToast(true);
-                    setTimeout(() => {
-                        setShowToast(false);
-                    }, 5000);
-                } else {
-                    setToastType("success");
-                    setToastMessage("Reset Password Successful!");
-                    setShowToast(true);
-                    setTimeout(() => {
-                        setShowToast(false);
-                    }, 5000);
-                }
+    try {
+      const response = await postWithAuth("update-password", formData);
 
-                handleClose();
-            } catch (error) {
-                console.error("Error submitting form:", error);
-            }
-        }
-    };
+      if (response.status === "fail") {
+        // Show backend error message
+        setToastType("error");
+        setToastMessage(response.message || "Failed to reset password!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 5000);
+      } else {
+        setToastType("success");
+        setToastMessage("Reset Password Successful!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 5000);
+        handleClose();
+      }
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+
+      // Check if it's a validation error (422)
+      if (error.response?.status === 422) {
+        const validationErrors = error.response.data.errors;
+
+        // Show the first validation error message
+        const firstError = Object.values(validationErrors)[0] as string[];
+        setToastType("error");
+        setToastMessage(firstError[0]);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 5000);
+      } else {
+        setToastType("error");
+        setToastMessage("Something went wrong. Please try again!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 5000);
+      }
+    }
+  }
+};
+
     return (
         <>
             <DashboardLayout>
@@ -346,6 +360,7 @@ export default function AllDocTable({ }: Props) {
                                         className="form-control"
                                         value={myEmail || ""}
                                         onChange={(e) => setMyEmail(e.target.value)}
+                                        readOnly
                                     />
                                 </div>
                             </div>
