@@ -3591,8 +3591,11 @@ export default function AllDocTable() {
               </div>
 
 
-              <div className="input-group mb-2">
-                <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+             {/*<div className="input-group mb-2">
+                <p
+                  className="mb-1 text-start w-100"
+                  style={{ fontSize: "14px" }}
+                >
                   Filter
                 </p>
                 <input
@@ -3603,7 +3606,7 @@ export default function AllDocTable() {
                   onChange={() => handleFilterChange}
                   required
                 />
-              </div>
+              </div>*/}
               <div className="d-flex flex-column">
                 <Table hover responsive>
                   <thead className="sticky-header">
