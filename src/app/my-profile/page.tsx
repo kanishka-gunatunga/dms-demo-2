@@ -194,7 +194,6 @@ const handleResetPassword = async () => {
       setFieldErrors(formattedErrors);
 
       // Show first error in toast
-      const firstError = Object.values(response.errors)[0] as string[];
       setToastType("error");
       setToastMessage("Error submitting form:");
       setShowToast(true);
