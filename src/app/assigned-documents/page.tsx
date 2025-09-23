@@ -246,6 +246,7 @@ export default function AllDocTable() {
   });
 
   const [generatedLink, setGeneratedLink] = useState<string>("");
+    const [generatedID, setGeneratedID] =useState<number>(0);
   const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
     null
   );
@@ -1022,6 +1023,7 @@ export default function AllDocTable() {
       )
     } else {
       setGeneratedLink(response.link);
+       setGeneratedID(response.id);
       handleOpenModal(
         "generatedShareableLinkModel",
         id,
@@ -1077,6 +1079,7 @@ export default function AllDocTable() {
       if (response.status === "success") {
         handleCloseModal("shareableLinkModel");
         setGeneratedLink(response.link);
+        setGeneratedID(response.id);
         handleOpenModal("generatedShareableLinkModel");
         setShareableLinkData(initialLinkData);
       } else {
@@ -3031,7 +3034,7 @@ export default function AllDocTable() {
           <Modal.Footer>
             <div className="d-flex flex-row">
               <button
-                onClick={() => handleDeleteShareableLink(1)}
+                onClick={() => handleDeleteShareableLink(generatedID)}
                 className="custom-icon-button button-success px-3 py-1 rounded me-2"
               >
                 <IoSaveOutline fontSize={16} className="me-1" /> Delete
