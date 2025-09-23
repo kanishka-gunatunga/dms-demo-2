@@ -5604,7 +5604,7 @@ export default function AllDocTable() {
       ) : 
       /* TXT / CSV / LOG Preview */
       ["txt", "csv", "log"].includes(viewDocument.type) ? (
-        <div className="text-preview">
+        <div className="text-preview" style={{ width: "100%" }}>
           <iframe
             src={viewDocument.url}
             title="Text Preview"
