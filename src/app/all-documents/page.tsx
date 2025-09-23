@@ -3187,6 +3187,7 @@ export default function AllDocTable() {
                       <DatePicker
                         showTime
                         className="w-100"
+                        dropdownClassName="custom-datepicker-popup"
                         defaultValue={
                           shareableLinkDataSetting.expire_date_time
                             ? dayjs(
