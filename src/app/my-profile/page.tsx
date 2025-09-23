@@ -358,70 +358,79 @@ const handleResetPassword = async () => {
                     >
                         <div className="d-flex flex-column w-100">
                             <div className="d-flex flex-column">
-                                <p className="mb-1" style={{ fontSize: "14px" }}>
-                                    Email
-                                </p>
-                                <div className="input-group mb-3">
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        value={myEmail || ""}
-                                        onChange={(e) => setMyEmail(e.target.value)}
-                                        readOnly
-                                    />
-                                </div>
+                            <p className="mb-1" style={{ fontSize: "14px" }}>
+                                Email
+                            </p>
+                            <div className="input-group mb-3">
+                                <input
+                                type="email"
+                                className={`form-control ${fieldErrors.email ? "is-invalid" : ""}`}
+                                value={myEmail || ""}
+                                onChange={(e) => setMyEmail(e.target.value)}
+                                readOnly
+                                />
+                                {fieldErrors.email && (
+                                <div className="invalid-feedback">{fieldErrors.email}</div>
+                                )}
                             </div>
-                            <div className="d-flex flex-column">
-                                <p className="mb-1" style={{ fontSize: "14px" }}>
-                                    Current Password
-                                </p>
-                                <div className="input-group mb-3">
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        onChange={(e) => setCurrentPassword(e.target.value)}
-                                    />
-                                </div>
                             </div>
-                            <div className="d-flex flex-column">
-                                <p className="mb-1" style={{ fontSize: "14px" }}>
-                                    Password
-                                </p>
-                                <div className="input-group mb-3">
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                            <div className="d-flex flex-column">
-                                <p className="mb-1" style={{ fontSize: "14px" }}>
-                                    Confirm Password
-                                </p>
-                                <div className="input-group mb-3">
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                      {error && <p className="text-danger " style={{ fontSize: "13px" }}>{error}</p>}
-                       {fieldErrors.email && (
-    <p className="text-danger">{fieldErrors.email}</p>
-  )}
-  {fieldErrors.current_password && (
-    <p className="text-danger">{fieldErrors.current_password}</p>
-  )}
-  {fieldErrors.password && (
-    <p className="text-danger">{fieldErrors.password}</p>
-  )}
-  {fieldErrors.password_confirmation && (
-    <p className="text-danger ">{fieldErrors.password_confirmation}</p>
-  )}
 
+                           <div className="d-flex flex-column">
+                            <p className="mb-1" style={{ fontSize: "14px" }}>
+                                Current Password
+                            </p>
+                            <div className="input-group mb-3">
+                                <input
+                                type="password"
+                                className={`form-control ${
+                                    fieldErrors.current_password ? "is-invalid" : ""
+                                }`}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                />
+                                {fieldErrors.current_password && (
+                                <div className="invalid-feedback">{fieldErrors.current_password}</div>
+                                )}
+                            </div>
+                            </div>
+
+                            <div className="d-flex flex-column">
+                            <p className="mb-1" style={{ fontSize: "14px" }}>
+                                Password
+                            </p>
+                            <div className="input-group mb-3">
+                                <input
+                                type="password"
+                                className={`form-control ${fieldErrors.password ? "is-invalid" : ""}`}
+                                onChange={(e) => setPassword(e.target.value)}
+                                />
+                                {fieldErrors.password && (
+                                <div className="invalid-feedback">{fieldErrors.password}</div>
+                                )}
+                            </div>
+                            </div>
+
+                            <div className="d-flex flex-column">
+                            <p className="mb-1" style={{ fontSize: "14px" }}>
+                                Confirm Password
+                            </p>
+                            <div className="input-group mb-3">
+                                <input
+                                type="password"
+                                className={`form-control ${
+                                    fieldErrors.password_confirmation ? "is-invalid" : ""
+                                }`}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                {fieldErrors.password_confirmation && (
+                                <div className="invalid-feedback">
+                                    {fieldErrors.password_confirmation}
+                                </div>
+                                )}
+                            </div>
+                            </div>
+
+                        </div>
+                     
                         <div className="d-flex flex-row mt-2">
                             <button
                                 onClick={handleResetPassword}
