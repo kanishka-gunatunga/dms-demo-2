@@ -430,7 +430,9 @@ const handleResetPassword = async () => {
                             </div>
 
                         </div>
-                     
+                      {error && <p className="text-danger " style={{ fontSize: "13px" }}>{error}</p>}
+                      
+
                         <div className="d-flex flex-row mt-2">
                             <button
                                 onClick={handleResetPassword}
