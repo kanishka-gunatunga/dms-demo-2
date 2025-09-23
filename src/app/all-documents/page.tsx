@@ -5590,50 +5590,50 @@ export default function AllDocTable() {
             </div>
           </Modal.Header>
           <Modal.Body className="p-2 p-lg-4">
-            <div className="d-flex preview-container">
-                        {viewDocument && (
-                          <>
-                            {/* Image Preview */}
-                            {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
-                              <Image
-                                src={viewDocument.url}
-                                alt={viewDocument.name}
-                                width={600}
-                                height={600}
-                              />
-                            ) : 
-                            /* PDF or Office Docs */
-                            (viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1) ? (
-                              <div
-                                className="iframe-container"
-                                data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}
-                              >
-                                <iframe
-                                  src={
-                                    viewDocument.type === "pdf"
-                                      ? viewDocument.url
-                                      : `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewDocument.url)}`
-                                  }
-                                  title="Document Preview"
-                                  style={{ width: "100%", height: "500px", border: "none" }}
-                                ></iframe>
-                              </div>
-                            ) : 
-                            /* TXT / CSV / LOG Preview */
-                            ["txt", "csv", "log"].includes(viewDocument.type) ? (
-                              <div className="text-preview">
-                                <iframe
-                                  src={viewDocument.url}
-                                  title="Text Preview"
-                                  style={{ width: "100%", height: "500px", border: "1px solid #ccc", background: "#fff" }}
-                                ></iframe>
-                              </div>
-                            ) : (
-                              <p>No preview available for this document type.</p>
-                            )}
-                          </>
-                        )}
-                      </div>
+           <div className="d-flex preview-container">
+  {viewDocument && (
+    <>
+      {/* Image Preview */}
+      {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
+        <Image
+          src={viewDocument.url}
+          alt={viewDocument.name}
+          width={600}
+          height={600}
+        />
+      ) : 
+      /* TXT / CSV / LOG Preview */
+      ["txt", "csv", "log"].includes(viewDocument.type) ? (
+        <div className="text-preview">
+          <iframe
+            src={viewDocument.url}
+            title="Text Preview"
+            style={{ width: "100%", height: "500px", border: "1px solid #ccc", background: "#fff" }}
+          ></iframe>
+        </div>
+      ) : 
+      /* PDF or Office Docs */
+      (viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1) ? (
+        <div
+          className="iframe-container"
+          data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}
+        >
+          <iframe
+            src={
+              viewDocument.type === "pdf"
+                ? viewDocument.url
+                : `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewDocument.url)}`
+            }
+            title="Document Preview"
+            style={{ width: "100%", height: "500px", border: "none" }}
+          ></iframe>
+        </div>
+      ) : (
+        <p>No preview available for this document type.</p>
+      )}
+    </>
+  )}
+</div>
 
             <p className="mb-1" style={{ fontSize: "14px" }}>
               Document Name :{" "}
