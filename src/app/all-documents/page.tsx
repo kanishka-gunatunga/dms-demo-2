@@ -1098,6 +1098,7 @@ export default function AllDocTable() {
       const response = await  getWithAuth(
         `delete-shareble-link/${id}/${userId}`
       );
+      console.log(`delete-shareble-link/${id}/${userId}`);
       if (response.status === "success") {
         setToastType("success");
         setToastMessage("The link was deleted successfully.");
