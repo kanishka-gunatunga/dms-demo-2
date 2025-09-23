@@ -174,58 +174,72 @@ const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
         return true;
     };
 const handleResetPassword = async () => {
-  if (validateForm()) {
-    const formData = new FormData();
-    formData.append("email", email || "");
-    formData.append("current_password", currentPassword);
-    formData.append("password", password);
-    formData.append("password_confirmation", confirmPassword);
+  if (!validateForm()) return;
 
-    try {
-      const response = await postWithAuth("update-password", formData);
+  const formData = new FormData();
+  formData.append("email", email || "");
+  formData.append("current_password", currentPassword);
+  formData.append("password", password);
+  formData.append("password_confirmation", confirmPassword);
 
-      if (response.status === "fail") {
-        // Backend failure message (not validation)
-        setToastType("error");
-        setToastMessage(response.message || "Failed to reset password!");
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 5000);
-      } else {
-        setToastType("success");
-        setToastMessage("Reset Password Successful!");
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 5000);
-        setFieldErrors({}); // clear validation errors
-        handleClose();
-      }
-    } catch (error: any) {
-      console.error("Error submitting form:", error);
+  try {
+    const response = await postWithAuth("update-password", formData);
 
-      if (error.response?.status === 422) {
-        const validationErrors = error.response.data.errors;
+    // Case 1: Laravel validation failed (422 with errors object)
+    if (response.errors) {
+      const formattedErrors: { [key: string]: string } = {};
+      Object.keys(response.errors).forEach((field) => {
+        formattedErrors[field] = response.errors[field][0];
+      });
+      setFieldErrors(formattedErrors);
 
-        // Store field-wise errors
-        const formattedErrors: { [key: string]: string } = {};
-        Object.keys(validationErrors).forEach((field) => {
-          formattedErrors[field] = validationErrors[field][0];
-        });
-        setFieldErrors(formattedErrors);
+      // Show first error in toast
+      const firstError = Object.values(response.errors)[0] as string[];
+      setToastType("error");
+      setToastMessage(firstError[0]);
+      setShowToast(true);
+      return;
+    }
 
-        // Optionally still show toast for the first error
-        const firstError = Object.values(validationErrors)[0] as string[];
-        setToastType("error");
-        setToastMessage(firstError[0]);
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 5000);
-      } else {
-        setToastType("error");
-        setToastMessage("Something went wrong. Please try again!");
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 5000);
-      }
+    // Case 2: Fail without field errors (e.g., wrong current password)
+    if (response.status === "fail") {
+      setToastType("error");
+      setToastMessage(response.message || "Failed to reset password!");
+      setShowToast(true);
+      return;
+    }
+
+    // Case 3: Success
+    setToastType("success");
+    setToastMessage("Reset Password Successful!");
+    setShowToast(true);
+    setFieldErrors({});
+    setError("");
+    handleClose();
+  } catch (error: any) {
+    console.error("Error submitting form:", error);
+
+    // Axios error with 422 (if wrapper throws)
+    if (error.response?.status === 422) {
+      const validationErrors = error.response.data.errors;
+      const formattedErrors: { [key: string]: string } = {};
+      Object.keys(validationErrors).forEach((field) => {
+        formattedErrors[field] = validationErrors[field][0];
+      });
+      setFieldErrors(formattedErrors);
+
+      const firstError = Object.values(validationErrors)[0] as string[];
+      setToastType("error");
+      setToastMessage(firstError[0]);
+      setShowToast(true);
+    } else {
+      setToastType("error");
+      setToastMessage("Something went wrong. Please try again!");
+      setShowToast(true);
     }
   }
 };
+
 
 
     return (
