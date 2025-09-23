@@ -49,7 +49,7 @@ export default function AllDocTable({ }: Props) {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [show, setShow] = useState(false);
-
+const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
     const router = useRouter();
 
     useEffect(() => {
@@ -173,8 +173,7 @@ export default function AllDocTable({ }: Props) {
         setError("");
         return true;
     };
-
-    const handleResetPassword = async () => {
+const handleResetPassword = async () => {
   if (validateForm()) {
     const formData = new FormData();
     formData.append("email", email || "");
@@ -186,7 +185,7 @@ export default function AllDocTable({ }: Props) {
       const response = await postWithAuth("update-password", formData);
 
       if (response.status === "fail") {
-        // Show backend error message
+        // Backend failure message (not validation)
         setToastType("error");
         setToastMessage(response.message || "Failed to reset password!");
         setShowToast(true);
@@ -196,16 +195,23 @@ export default function AllDocTable({ }: Props) {
         setToastMessage("Reset Password Successful!");
         setShowToast(true);
         setTimeout(() => setShowToast(false), 5000);
+        setFieldErrors({}); // clear validation errors
         handleClose();
       }
     } catch (error: any) {
       console.error("Error submitting form:", error);
 
-      // Check if it's a validation error (422)
       if (error.response?.status === 422) {
         const validationErrors = error.response.data.errors;
 
-        // Show the first validation error message
+        // Store field-wise errors
+        const formattedErrors: { [key: string]: string } = {};
+        Object.keys(validationErrors).forEach((field) => {
+          formattedErrors[field] = validationErrors[field][0];
+        });
+        setFieldErrors(formattedErrors);
+
+        // Optionally still show toast for the first error
         const firstError = Object.values(validationErrors)[0] as string[];
         setToastType("error");
         setToastMessage(firstError[0]);
@@ -220,6 +226,7 @@ export default function AllDocTable({ }: Props) {
     }
   }
 };
+
 
     return (
         <>
@@ -401,7 +408,20 @@ export default function AllDocTable({ }: Props) {
                                 </div>
                             </div>
                         </div>
-                        {error && <p className="text-danger">{error}</p>}
+                      {error && <p className="text-danger " style={{ fontSize: "13px" }}>{error}</p>}
+                       {fieldErrors.email && (
+    <p className="text-danger">{fieldErrors.email}</p>
+  )}
+  {fieldErrors.current_password && (
+    <p className="text-danger">{fieldErrors.current_password}</p>
+  )}
+  {fieldErrors.password && (
+    <p className="text-danger">{fieldErrors.password}</p>
+  )}
+  {fieldErrors.password_confirmation && (
+    <p className="text-danger ">{fieldErrors.password_confirmation}</p>
+  )}
+
                         <div className="d-flex flex-row mt-2">
                             <button
                                 onClick={handleResetPassword}
