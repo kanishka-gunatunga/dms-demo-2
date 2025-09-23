@@ -371,7 +371,7 @@ export const fetchRemindersData = async (
   setSelectedDates: React.Dispatch<React.SetStateAction<any>>
 ) => {
   try {
-    const response = await getWithAuth("reminders-user");
+    const response = await getWithAuth("reminders");
     // console.log("response reminders :", response)
     const transformedData = response.map((item: { date_time: any; created_at: any; end_date_time: any; subject: any; }) => {
       const date = item.date_time || item.created_at || item.end_date_time;
@@ -387,6 +387,25 @@ export const fetchRemindersData = async (
   }
 };
 
+export const fetchRemindersDataUser = async (
+  setSelectedDates: React.Dispatch<React.SetStateAction<any>>
+) => {
+  try {
+    const response = await getWithAuth("reminders-user");
+    // console.log("response reminders :", response)
+    const transformedData = response.map((item: { date_time: any; created_at: any; end_date_time: any; subject: any; }) => {
+      const date = item.date_time || item.created_at || item.end_date_time;
+      return {
+        date: dayjs(date).format("YYYY-MM-DD"),
+        content: item.subject,
+        type: "success",
+      };
+    });
+    setSelectedDates(response);
+  } catch (error) {
+    console.error("Failed to fetch reminders data:", error);
+  }
+};
 
 export const fetchSectorData = async (
   setSectorsData: React.Dispatch<React.SetStateAction<any>>

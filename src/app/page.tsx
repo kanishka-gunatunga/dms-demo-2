@@ -10,7 +10,7 @@ import InfoModal from "@/components/common/InfoModel";
 import useAuth from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { useEffect, useState } from "react";
-import { fetchRemindersData,fetchDocumentCategoryWithCount } from "@/utils/dataFetchFunctions";
+import { fetchRemindersDataUser,fetchDocumentCategoryWithCount } from "@/utils/dataFetchFunctions";
 import { Badge, Calendar } from "antd";
 import type { BadgeProps, CalendarProps } from "antd";
 import type { Dayjs } from "dayjs";
@@ -84,7 +84,7 @@ export default function Home() {
     //   setSelectedDates(transformedData);
     // });
 
-    fetchRemindersData((data) => {
+    fetchRemindersDataUser((data) => {
       const transformedData = data
         .filter((reminder: { start_date_time: any; }) => reminder.start_date_time) 
         .map((reminder: { start_date_time: any; subject: any; }) => ({
