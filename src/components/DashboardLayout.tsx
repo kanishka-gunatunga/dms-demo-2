@@ -210,12 +210,12 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
           permission: { group: "Role", action: "View Roles" },
         },
         
-        {
-          name: "Role User",
-          url: "/role-user",
-          icon: <LuUserPlus />,
-          permission: { group: "User", action: "Assign User Role" },
-        },
+        // {
+        //   name: "Role User",
+        //   url: "/role-user",
+        //   icon: <LuUserPlus />,
+        //   permission: { group: "User", action: "Assign User Role" },
+        // },
       ],
     },
     {
