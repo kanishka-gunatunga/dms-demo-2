@@ -329,7 +329,7 @@ const handleRemoveSupervisor = (name: string) => {
               </div>
               <div className="col-12 col-lg-6 d-flex flex-column">
                 <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
-                  Roles
+                  Role
                 </p>
                 <div className="d-flex flex-column position-relative">
                   <DropdownButton
