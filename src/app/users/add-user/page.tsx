@@ -91,16 +91,17 @@ useEffect(() => {
     return <LoadingSpinner />;
   }
 
-  const handleRoleSelect = (roleId: string) => {
-    const selectedRole = roleDropDownData.find(
-      (role) => role.id.toString() === roleId
-    );
+const handleRoleSelect = (roleId: string) => {
+  const selectedRole = roleDropDownData.find(
+    (role) => role.id.toString() === roleId
+  );
 
-    if (selectedRole && !selectedRoleIds.includes(roleId)) {
-      setSelectedRoleIds([...selectedRoleIds, roleId]);
-      setRoles([...roles, selectedRole.role_name]);
-    }
-  };
+  if (selectedRole) {
+    // Only allow one role, replace previous selection
+    setSelectedRoleIds([roleId]);
+    setRoles([selectedRole.role_name]);
+  }
+};
   const handleSupervisorSelect = (supervisorId: string) => {
   const selectedSupervisor = supervisorDropDownData.find(
     (sup) => sup.id.toString() === supervisorId
@@ -332,27 +333,23 @@ const handleRemoveSupervisor = (name: string) => {
                 </p>
                 <div className="d-flex flex-column position-relative">
                   <DropdownButton
-                    id="dropdown-category-button"
-                    title={
-                      roles.length > 0 ? roles.join(", ") : "Select Roles"
-                    }
-                    className="custom-dropdown-text-start text-start w-100"
-                    onSelect={(value) => {
-                      if (value) handleRoleSelect(value);
-                    }}
-                  >
-                    {roleDropDownData.length > 0 ? (
-                      roleDropDownData.map((role) => (
-                        <Dropdown.Item key={role.id} eventKey={role.id}>
-                          {role.role_name}
-                        </Dropdown.Item>
-                      ))
-                    ) : (
-                      <Dropdown.Item disabled>
-                        No Roles available
+                  id="dropdown-category-button"
+                  title={roles.length > 0 ? roles[0] : "Select Role"} // show only the selected role
+                  className="custom-dropdown-text-start text-start w-100"
+                  onSelect={(value) => {
+                    if (value) handleRoleSelect(value);
+                  }}
+                >
+                  {roleDropDownData.length > 0 ? (
+                    roleDropDownData.map((role) => (
+                      <Dropdown.Item key={role.id} eventKey={role.id}>
+                        {role.role_name}
                       </Dropdown.Item>
-                    )}
-                  </DropdownButton>
+                    ))
+                  ) : (
+                    <Dropdown.Item disabled>No Roles available</Dropdown.Item>
+                  )}
+                </DropdownButton>
                   {errors.role && <div className="invalid-feedback">{errors.role}</div>}
                   <div className="mt-1">
                     {roles.map((role, index) => (
