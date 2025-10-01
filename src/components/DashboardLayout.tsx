@@ -15,7 +15,7 @@ import {
   IoDocumentTextOutline,
   IoListOutline,
 } from "react-icons/io5";
-import { LuLayoutDashboard, LuLogIn, LuUserCog, LuUserPlus } from "react-icons/lu";
+import { LuLayoutDashboard, LuLogIn, LuUserCog } from "react-icons/lu";
 import { RiUser3Line } from "react-icons/ri";
 import { TbUsers } from "react-icons/tb";
 import Cookie from "js-cookie";
