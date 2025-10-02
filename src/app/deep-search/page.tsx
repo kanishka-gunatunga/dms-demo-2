@@ -1755,7 +1755,6 @@ const [generatedID, setGeneratedID] =useState<number>(0);
                   drop="end"
                   title={<FaEllipsisV />}
                   className="no-caret position-static custom-dropdown"
-                  style={{ zIndex: "99999" }}
                 >
                    {hasPermission(permissions, "All Documents", "View Documents") && (
                   <Dropdown.Item
