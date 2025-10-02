@@ -370,7 +370,7 @@ const [generatedID, setGeneratedID] =useState<number>(0);
     } catch (error) {
       console.error("Error :", error);
     }
-  };
+  }; 
 
   const handleCategoryEditSelect = (categoryId: string) => {
     const selectedCategory = categoryDropDownData.find(
@@ -1742,10 +1742,32 @@ const [generatedID, setGeneratedID] =useState<number>(0);
   paginatedData.map((item) => (
     <div key={item.id} className="col-md-12 mb-4">
     
-      <p className="mb-2 mt-2" style={{ fontSize: "16px", color: "#000",fontWeight: "bold" }}>
-        {item.name}
-      </p>
+            <div className="d-flex justify-content-between align-items-center">
+                <p 
+                  className="mb-2 mt-2"
+                  style={{ fontSize: "16px", color: "#000", fontWeight: "bold" }}
+                >
+                  {item.name}
+                </p>
 
+                <DropdownButton
+                  id={`dropdown-${item.id}`} 
+                  drop="end"
+                  title={<FaEllipsisV />}
+                  className="no-caret position-static"
+                  style={{ zIndex: 99999 }}
+                >
+                   {hasPermission(permissions, "All Documents", "View Documents") && (
+                  <Dropdown.Item
+                    className="py-2"
+                    onClick={() => handleOpenModal("viewModel", item.id, item.name)}
+                  >
+                    <IoEye className="me-2" />
+                    View
+                  </Dropdown.Item>
+                )}
+                </DropdownButton>
+              </div>
       {item.pages && item.pages.length > 0 ? (
         <div>
           <p style={{ fontSize: "14px", fontWeight: "bold", color: "#555" }}>
