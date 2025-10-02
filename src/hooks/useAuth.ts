@@ -21,7 +21,7 @@ const useAuth = () => {
         router.push("/login");
       };
 
-      const inactivityDuration = 900000; // 15 minutes = 900000 ms
+      const inactivityDuration = 1800000; // 30 minutes = 1800000 ms
       const maxSessionDuration = 86400000 ; // 6 hours = 21600000 ms
 
       let inactivityTimeout = setTimeout(logoutUser, inactivityDuration);
