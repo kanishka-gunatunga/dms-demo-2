@@ -59,17 +59,26 @@ export default function Home() {
   const [categoriesData, setCategoriesData] = useState<{id: number, category_name: string, documents_count: number}[]>([]);
   const [pieData, setPieData] = useState<{name: string, value: number, color: string}[]>([]);
 
-  useEffect(() => {
-    fetchDocumentCategoryWithCount(setCategoriesData);
-  }, []);
-    useEffect(() => {
-    const data = categoriesData.map((category) => ({
-      name: category.category_name,
-      value: category.documents_count,
-      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // random color
-    }));
-    setPieData(data);
-  }, [categoriesData]);
+  const colors = [
+  "#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1",
+  "#a4de6c", "#d0ed57", "#ffc0cb", "#ffbb28", "#00C49F",
+  "#0088FE", "#FF6666", "#66CCFF", "#9966CC", "#FF9933",
+  "#33CC33", "#FF33CC", "#3399FF", "#FF6699", "#CCFF66"
+];
+
+useEffect(() => {
+  fetchDocumentCategoryWithCount(setCategoriesData);
+}, []);
+
+useEffect(() => {
+  const data = categoriesData.map((category, index) => ({
+    name: category.category_name,
+    value: category.documents_count,
+    color: colors[index % colors.length], // assign colors in order, repeat if more than 20
+  }));
+  setPieData(data);
+}, [categoriesData]);
+
   useEffect(() => {
     // const transformRemindersToDates = (reminders: any[]) => {
     //   return reminders.map((reminder) => ({
