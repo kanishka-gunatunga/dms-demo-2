@@ -16,8 +16,9 @@ import { useRouter } from "next/navigation";
 import { useCompanyProfile } from "@/context/userCompanyProfile";
 import LoadingSpinner from "./common/LoadingSpinner";
 import { TbUsers } from "react-icons/tb";
-import { IoMdTrash } from "react-icons/io";
+import {IoMdClose, IoMdTrash} from "react-icons/io";
 import { GiBrain } from "react-icons/gi";
+import {AiOutlineMenu} from "react-icons/ai";
 
 
 const DashboardLayoutSuperAdmin: React.FC<{ children: React.ReactNode }> = ({
@@ -110,7 +111,7 @@ const DashboardLayoutSuperAdmin: React.FC<{ children: React.ReactNode }> = ({
   ];
 
 
-  const logoUrl = data?.logo_url || '/logo.svg';
+  const logoUrl = data?.logo_url || '/new_logo.png';
 
   if (loading) return <LoadingSpinner />;
 
@@ -130,8 +131,8 @@ const DashboardLayoutSuperAdmin: React.FC<{ children: React.ReactNode }> = ({
                 <Image
                   src={logoUrl}
                   alt=""
-                  width={120}
-                  height={100}
+                  width={360}
+                  height={300}
                   objectFit="responsive"
                   className="img-fluid navLogo"
                 />
@@ -146,7 +147,7 @@ const DashboardLayoutSuperAdmin: React.FC<{ children: React.ReactNode }> = ({
                   borderRadius: "100%",
                 }}
               >
-                ☰
+                  {isSidebarCollapsed ? <AiOutlineMenu /> : <IoMdClose />}
               </Button>
               <div className="d-flex d-lg-none align-items-center justify-content-center">
 
@@ -186,7 +187,7 @@ const DashboardLayoutSuperAdmin: React.FC<{ children: React.ReactNode }> = ({
                     borderRadius: "100%",
                   }}
                 >
-                  ☰
+                    {!isDrawerOpen ? <AiOutlineMenu /> : <IoMdClose />}
                 </Button>
               </div>
             </div>
