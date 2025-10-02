@@ -26,6 +26,8 @@ import { useCompanyProfile } from "@/context/userCompanyProfile";
 import LoadingSpinner from "./common/LoadingSpinner";
 import { HiDocumentReport } from "react-icons/hi";
 import ChatWindow from "./chat/ChatWindow";
+import {AiOutlineMenu} from "react-icons/ai";
+import {IoMdClose} from "react-icons/io";
 // import { notification } from 'antd';
 // import Link from "next/link";
 
@@ -287,7 +289,8 @@ const filteredNavItems = navItems
   .filter((item): item is Exclude<typeof item, null> => item !== null);
 
 
-  const logoUrl = data?.logo_url || '/logo.svg';
+  const logoUrl = data?.logo_url || '/new_logo.png';
+  // const logoUrl = '/new_logo.png';
 
   if (loading) return <LoadingSpinner />;
 
@@ -307,8 +310,8 @@ const filteredNavItems = navItems
                 <Image
                   src={logoUrl}
                   alt=""
-                  width={120}
-                  height={100}
+                  width={360}
+                  height={300}
                   objectFit="responsive"
                   className="img-fluid navLogo"
                 />
@@ -323,7 +326,7 @@ const filteredNavItems = navItems
                   borderRadius: "100%",
                 }}
               >
-                ☰
+                  {isSidebarCollapsed ? <AiOutlineMenu /> : <IoMdClose />}
               </Button>
               <div className="d-flex d-lg-none align-items-center justify-content-center">
                 
@@ -363,7 +366,7 @@ const filteredNavItems = navItems
                     borderRadius: "100%",
                   }}
                 >
-                  ☰
+                    {!isDrawerOpen ? <AiOutlineMenu /> : <IoMdClose />}
                 </Button>
               </div>
             </div>
@@ -455,7 +458,7 @@ const filteredNavItems = navItems
                   }}
                 >
                   <Image
-                    src={"/user.jpg"}
+                    src={"/avatar.png"}
                     alt=""
                     width={35}
                     height={35}
@@ -476,16 +479,17 @@ const filteredNavItems = navItems
 
       {/* ===================== Sidebar and main content ==================== */}
       <div
-        className="d-none d-lg-flex flex-grow-1"
-        style={{ paddingTop: "67px", height: "100svh", overflow: "hidden" }}
+        className="d-block d-lg-flex flex-grow-1"
+        style={{ paddingTop: "85px", height: "100svh", overflow: "hidden" }}
       >
         {/* sidebar */}
         <div
-          className={`bg-white rounded flex-grow-1 ${isSidebarCollapsed ? "collapsed-sidebar" : "expanded-sidebar"
+          className={`rounded flex-grow-1 ${isSidebarCollapsed ? "collapsed-sidebar" : "expanded-sidebar"
             }`}
           style={{
             width: isSidebarCollapsed ? "70px" : "290px",
             transition: "width 0.3s",
+              backgroundColor: "#EBEBEB",
           }}
         >
           <Nav
@@ -507,7 +511,8 @@ const filteredNavItems = navItems
                     href={item.subItems ? undefined : item.url}
                     className="d-flex align-items-center justify-content-between px-2 pb-4"
                   >
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center"
+                    >
                       {item.icon}
                       <span
                         className={`ms-2 ${isSidebarCollapsed ? "d-none" : ""}`}
