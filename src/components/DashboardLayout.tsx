@@ -304,7 +304,7 @@ const filteredNavItems = navItems
       {/* =============== Header ===================== */}
       <Navbar bg="white" expand="lg" className="w-100 fixed-top shadow-sm">
         <Container fluid>
-          <div className="d-flex flex-row w-100 px-0 px-lg-5">
+          <div className="d-flex flex-row w-100 px-0 nav-padding">
             <div className="col-12 col-lg-6 d-flex flex-row justify-content-between justify-content-lg-start">
               <Navbar.Brand href="#">
                 <Image
