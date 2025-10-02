@@ -950,3 +950,11 @@ iframe #WordViewerStatusBar {
 .navbarAside a svg {
     color: #8B4513 !important;
 }
+
+
+@media (min-width: 992px) {
+    .nav-padding {
+        padding-right: 1rem !important;
+        padding-left: 1rem !important;
+    }
+}
