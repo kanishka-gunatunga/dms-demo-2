@@ -4471,228 +4471,106 @@ const [generatedID, setGeneratedID] =useState<number>(0);
             </div>
           </Modal.Header>
           <Modal.Body className="p-2 p-lg-4">
-            <div className="d-flex preview-container">
-              {viewDocument && (
-
-                <>
-                  {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
-                    <Image
-                      src={viewDocument.url}
-                      alt={viewDocument.name}
-                      width={600}
-                      height={600}
-                    />
-                  ) : viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1 ? (
-                    <div className="iframe-container" data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}>
-                      <iframe
-                        src={
-                          viewDocument.type === "pdf"
-                            ? viewDocument.url
-                            : `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewDocument.url)}`
-                        }
-                        title="Document Preview"
-                        style={{ width: "100%", height: "500px", border: "none" }}
-                      ></iframe>
-                    </div>
-                  ) : (
-                    <p>No preview available for this document type.</p>
-                  )}
-                </>
-              )}
-            </div>
-
-
-            <p className="mb-1" style={{ fontSize: "14px" }}>
-              Document Name : <span style={{ fontWeight: 600 }} >{viewDocument?.name || ""}</span>
-            </p>
-            <p className="mb-1" style={{ fontSize: "14px" }}>
-              Category : <span style={{ fontWeight: 600 }} >{viewDocument?.category.category_name}</span>
-            </p>
-            <p className="mb-1 " style={{ fontSize: "14px" }}>
-              Description : <span style={{ fontWeight: 600 }} >{viewDocument?.description || ""}</span>
-            </p>
-            <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
-              Meta tags:{" "}
-              {metaTags.map((tag, index) => (
-                <span
-                  key={index}
-                  style={{
-                    fontWeight: 600,
-                    backgroundColor: "#683ab7",
-                    color: "white",
-                  }}
-                  className="me-2 px-3 rounded py-1 mb-2"
-                >
-                  {tag}
-                </span>
-              ))}
-            </p>
-            <div className="d-flex flex-column">
-              <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
-                Attributes:
-                {attributes.map((attr, index) => (
-                  <div key={index} style={{
-                    fontWeight: 600,
-                    textTransform: 'capitalize'
-                  }}
-                    className="me-2 px-3 rounded py-1">
-                    <span style={{ fontWeight: 600 }}>{attr.attribute}:</span> {attr.value}
-                  </div>
-                ))}
-              </p>
-            </div>
-
-            <div className="d-flex flex-wrap gap-3 py-3">
-              {hasPermission(permissions, "All Documents", "Edit Document") && (
-                <button
-                  onClick={() =>
-                    handleOpenModal("editModel", viewDocument?.id, viewDocument?.name)
-                  }
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-                >
-                  <MdModeEditOutline className="me-2" />
-                  Edit
-                </button>
-              )}
-              {hasPermission(permissions, "All Documents", "Share Document") && (
-                <button onClick={() =>
-                  handleOpenModal(
-                    "shareDocumentModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                } className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1">
-                  <IoShareSocial className="me-2" />
-                  Share
-                </button>
-              )}
-              {hasPermission(permissions, "All Documents", "Manage Sharable Link") && (
-                <button onClick={() =>
-                  handleGetShareableLinkModel(viewDocument?.id || 0)
-                }
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1">
-                  <IoShareSocial className="me-2" />
-                  Get Shareable Link
-                </button>
-              )}
-              {hasPermission(permissions, "All Documents", "Download Document") && viewDocument?.id && (
-                <button
-                  onClick={() => handleDownload(viewDocument?.id || 0, userId)}
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1">
-                  <MdFileDownload className="me-2" />
-                  Download
-                </button>
-              )}
-
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "uploadNewVersionFileModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <MdUpload className="me-2" />
-                Upload New Version file
-              </button>
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "versionHistoryModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <GoHistory className="me-2" />
-                Version History
-              </button>
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "commentModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <BiSolidCommentDetail className="me-2" />
-                Comment
-              </button>
-
-              {hasPermission(permissions, "All Documents", "Add Reminder") && (
-                <button
-                  onClick={() =>
-                    handleOpenModal(
-                      "addReminderModel",
-                      viewDocument?.id, viewDocument?.name
-                    )
-                  }
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-                >
-                  <BsBellFill className="me-2" />
-                  Add Reminder
-                </button>
-              )}
-              {hasPermission(permissions, "All Documents", "Send Email") && (
-                <button
-                  onClick={() =>
-                    handleOpenModal(
-                      "sendEmailModel",
-                      viewDocument?.id, viewDocument?.name
-                    )
-                  }
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-                >
-                  <MdEmail className="me-2" />
-                  Send Email
-                </button>
-              )}
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "removeIndexingModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <AiOutlineZoomOut className="me-2" />
-                Remove From Search
-              </button>
-
-              {hasPermission(permissions, "All Documents", "Archive Document") && (
-                <button
-                  onClick={() =>
-                    handleOpenModal(
-                      "docArchivedModel",
-                      viewDocument?.id, viewDocument?.name
-                    )
-                  }
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-                >
-                  <FaArchive className="me-2" />
-                  Archive
-                </button>
-              )}
-              {hasPermission(permissions, "All Documents", "Delete Document") && (
-                <button
-                  onClick={() =>
-                    handleOpenModal(
-                      "deleteFileModel",
-                      viewDocument?.id, viewDocument?.name
-                    )
-                  }
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-                >
-                  <AiFillDelete className="me-2" />
-                  Delete
-                </button>
-              )}
-
-            </div>
-
-          </Modal.Body>
+                       <div className="d-flex preview-container">
+                                    {viewDocument && (
+                                      <>
+                                        {/* Image Preview */}
+                                        {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
+                                          <Image
+                                            src={viewDocument.url}
+                                            alt={viewDocument.name}
+                                            width={600}
+                                            height={600}
+                                          />
+                                        ) : 
+                                        /* TXT / CSV / LOG Preview */
+                                        ["txt", "csv", "log"].includes(viewDocument.type) ? (
+                                          <div className="text-preview" style={{ width: "100%" }}>
+                                            <iframe
+                                              src={viewDocument.url}
+                                              title="Text Preview"
+                                              style={{ width: "100%", height: "500px", border: "1px solid #ccc", background: "#fff" }}
+                                            ></iframe>
+                                          </div>
+                                        ) : 
+                                        /* PDF or Office Docs */
+                                        (viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1) ? (
+                                          <div
+                                            className="iframe-container"
+                                            data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}
+                                          >
+                                            <iframe
+                                              src={
+                                                viewDocument.type === "pdf"
+                                                  ? viewDocument.url
+                                                  : `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewDocument.url)}`
+                                              }
+                                              title="Document Preview"
+                                              style={{ width: "100%", height: "500px", border: "none" }}
+                                            ></iframe>
+                                          </div>
+                                        ) : (
+                                          <p>No preview available for this document type.</p>
+                                        )}
+                                      </>
+                                    )}
+                                  </div>
+          
+                      <p className="mb-1" style={{ fontSize: "14px" }}>
+                        Document Name :{" "}
+                        <span style={{ fontWeight: 600 }}>
+                          {viewDocument?.name || ""}
+                        </span>
+                      </p>
+                      <p className="mb-1" style={{ fontSize: "14px" }}>
+                        Category :{" "}
+                        <span style={{ fontWeight: 600 }}>
+                          {viewDocument?.category.category_name}
+                        </span>
+                      </p>
+                      <p className="mb-1 " style={{ fontSize: "14px" }}>
+                        Description :{" "}
+                        <span style={{ fontWeight: 600 }}>
+                          {viewDocument?.description || ""}
+                        </span>
+                      </p>
+                      <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                        Meta tags:{" "}
+                        {metaTags.map((tag, index) => (
+                          <span
+                            key={index}
+                            style={{
+                              fontWeight: 600,
+                              backgroundColor: "#683ab7",
+                              color: "white",
+                            }}
+                            className="me-2 px-3 rounded py-1 mb-2"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </p>
+                      <div className="d-flex flex-column">
+                        <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                          Attributes:
+                          {attributes.map((attr, index) => (
+                            <div
+                              key={index}
+                              style={{
+                                fontWeight: 600,
+                                textTransform: "capitalize",
+                              }}
+                              className="me-2 px-3 rounded py-1"
+                            >
+                              <span style={{ fontWeight: 600 }}>{attr.attribute}:</span>{" "}
+                              {attr.value}
+                            </div>
+                          ))}
+                        </p>
+                      </div>
+          
+                     
+                    </Modal.Body>
 
           <Modal.Footer>
             <div className="d-flex flex-row justify-content-start">
