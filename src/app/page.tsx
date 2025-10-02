@@ -60,13 +60,16 @@ export default function Home() {
   const [pieData, setPieData] = useState<{name: string, value: number, color: string}[]>([]);
 
   useEffect(() => {
-  const data = categoriesData.map((category, index) => ({
-    name: category.category_name,
-    value: category.documents_count,
-    color: `hsl(${(index * 360) / categoriesData.length}, 70%, 50%)`, // evenly spaced
-  }));
-  setPieData(data);
-}, [categoriesData]);
+    fetchDocumentCategoryWithCount(setCategoriesData);
+  }, []);
+    useEffect(() => {
+    const data = categoriesData.map((category) => ({
+      name: category.category_name,
+      value: category.documents_count,
+      color: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // random color
+    }));
+    setPieData(data);
+  }, [categoriesData]);
   useEffect(() => {
     // const transformRemindersToDates = (reminders: any[]) => {
     //   return reminders.map((reminder) => ({
