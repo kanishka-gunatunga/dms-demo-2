@@ -1751,11 +1751,11 @@ const [generatedID, setGeneratedID] =useState<number>(0);
                 </p>
 
                 <DropdownButton
-                  id={`dropdown-${item.id}`} 
+                  id="dropdown-basic-button" 
                   drop="end"
                   title={<FaEllipsisV />}
-                  className="no-caret position-static"
-                  style={{ zIndex: 99999 }}
+                  className="no-caret position-static custom-dropdown"
+                  style={{ zIndex: "99999" }}
                 >
                    {hasPermission(permissions, "All Documents", "View Documents") && (
                   <Dropdown.Item
