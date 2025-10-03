@@ -244,11 +244,11 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
       url: "#",
       icon: <HiOutlineCog6Tooth />,
       subItems: [
-        {
-          name: "SMTP Settings",
-          url: "/email-smtp",
-          permission: { group: "Email", action: "Manage SMTP Settings" },
-        },
+        // {
+        //   name: "SMTP Settings",
+        //   url: "/email-smtp",
+        //   permission: { group: "Email", action: "Manage SMTP Settings" },
+        // },
         {
           name: "Company Profile",
           url: "/company-profile",
