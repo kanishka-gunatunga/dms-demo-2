@@ -49,6 +49,7 @@ export default function AllDocTable() {
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [localSubmitted, setLocalSubmitted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [processingError, setProcessingError] = useState(false);
   const [categoryDropDownData, setCategoryDropDownData] = useState<
     CategoryDropdownItem[]
   >([]);
@@ -271,6 +272,7 @@ export default function AllDocTable() {
         }, 5000);
       }
        setIsProcessing(true);
+       setProcessingError(false); 
       const processDocResponse = await getWithAuth("process-documents");
       if (processDocResponse.status === "success") {
         setIsProcessing(false);
@@ -282,6 +284,7 @@ export default function AllDocTable() {
           }, 2000);
       } else {
         setIsProcessing(false);
+        setProcessingError(true);
         setToastType("error");
         setToastMessage("Fail to index documents");
         setShowToast(true);
@@ -416,6 +419,7 @@ export default function AllDocTable() {
         setLocalSubmitted(true);
       }
       setIsProcessing(true);
+      setProcessingError(false); 
       const processDocResponse = await getWithAuth("process-documents");
       if (processDocResponse.status === "success") {
         setIsProcessing(false);
@@ -427,6 +431,7 @@ export default function AllDocTable() {
           }, 2000);
       } else {
         setIsProcessing(false);
+        setProcessingError(true);
         setToastType("error");
         setToastMessage("Fail to index documents");
         setShowToast(true);
@@ -865,11 +870,23 @@ export default function AllDocTable() {
                 </div>
                   </div>
                 </div>
-                {isProcessing && (
-                <span className="loading-container">
-                    Please wait unitll we process your documents <span className="dots"><span>{'>'}</span><span>{'>'}</span><span>{'>'}</span></span>
-                </span>
-                )}
+                {isProcessing && !processingError && (
+  <span className="loading-container">
+    Please wait until we process your documents{" "}
+    <span className="dots">
+      <span>{">"}</span>
+      <span>{">"}</span>
+      <span>{">"}</span>
+    </span>
+  </span>
+)}
+
+{processingError && (
+  <span className="loading-container" style={{ color: "red", fontWeight: "600" }}>
+    Failed to process documents. Please try again.
+  </span>
+)}
+
                 <div className="d-flex flex-row mt-5">
                   <button 
                     disabled={loading || (!apiCallLocalFailed && localSubmitted)}
@@ -1052,11 +1069,23 @@ export default function AllDocTable() {
 
 
 
-                        {isProcessing && (
-                <span className="loading-container">
-                    Please wait unitll we process your documents <span className="dots"><span>{'>'}</span><span>{'>'}</span><span>{'>'}</span></span>
-                </span>
-                )}
+                       {isProcessing && !processingError && (
+            <span className="loading-container">
+              Please wait until we process your documents{" "}
+              <span className="dots">
+                <span>{">"}</span>
+                <span>{">"}</span>
+                <span>{">"}</span>
+              </span>
+            </span>
+          )}
+
+          {processingError && (
+            <span className="loading-container" style={{ color: "red", fontWeight: "600" }}>
+              Failed to process documents. Please try again.
+            </span>
+          )}
+
 
                 <div className="d-flex flex-row mt-5">
                   <button
